@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('formations_img_delete', {'id': formation.id}) }}" onsubmit="return confirm('Supprimer l\'image ?');">
+    <input type="hidden" name="_method" value="POST">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ formation.id) }}">
+    <button class="btn">Supprimer<i class="fa fa-trash-o"></i></button>
+</form>

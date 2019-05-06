@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Image{% endblock %}
+
+{% block body %}
+    <h1>Image</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ image.id }}</td>
+            </tr>
+            <tr>
+                <th>Path</th>
+                <td>{{ image.path }}</td>
+            </tr>
+            <tr>
+                <th>ImgPath</th>
+                <td>{{ image.imgPath }}</td>
+            </tr>
+            <tr>
+                <th>Alternative</th>
+                <td>{{ image.alternative }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('image_index') }}">back to list</a>
+    {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+    {% if is_granted("ROLE_ADMIN") %}
+    <a href="{{ path('image_edit', {'id': image.id}) }}">edit</a>
+
+    {{ include('image/_delete_form.html.twig') }}
+    {% endif %}
+    {% endif %}
+{% endblock %}

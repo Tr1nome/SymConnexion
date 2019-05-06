@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formation index{% endblock %}
+
+{% block body %}
+    <h1>Nos Formations</h1>
+
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>actions</th>
+                {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+                {% if is_granted("ROLE_ADMIN") %}
+                <th>Actions admin</th>
+                {% endif %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for formation in formations %}
+
+            <tr>
+                <td>{% if formation.image %}<img src="{{asset(formation.image.imgPath)}}"class="img-thumbnail"style="height:100px;width:150px;"/>{% else %}Aucune image selectionnée{% endif %}</td>
+                <td>{{ formation.name }}</td>
+                <td>{{ formation.description }}</td>
+                <td>
+                    <a href="{{ path('formation_show', {'id': formation.id}) }}"><i class="fas fa-eye">Détails</i></a>
+
+                </td>
+                {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <td style="display:flex; justify-content: space-evenly;">
+                        <a href="{{ path('formation_edit', {'id': formation.id}) }}"><button class="btn-primary" style="width:50px;height:50px;"><i class="fas fa-edit"></i></button></a>
+                        {{ include('formation/_delete_form.html.twig') }}
+                    {% endif %}
+                {% endif %}
+                        </td>
+            </tr>
+
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+            <hr style="color:black;">
+        {% endfor %}
+        </tbody>
+
+    </table>
+    {% if is_granted("IS_AUTHENTICATED_FULLY") and is_granted("ROLE_ADMIN") %}
+    <a href="{{ path('formation_new') }}"><i class="fas fa-plus-square" style="color:green;"></i></a>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Formation{% endblock %}
+
+{% block body %}
+    <h1>Edit Formation</h1>
+    {% if formation.image %}
+        <img src="{{ asset(formation.image.imgPath) }}" />
+        {{ include('formation/_delete_img_form.html.twig') }}
+    {% endif %}
+
+    {{ include('formation/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('formation_index') }}">back to list</a>
+
+    {{ include('formation/_delete_form.html.twig') }}
+{% endblock %}
