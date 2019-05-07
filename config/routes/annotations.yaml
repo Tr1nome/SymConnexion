@@ -1,3 +1,9 @@
 controllers:
+    host: 'connexion.fr'
     resource: ../../src/Controller/
+    type: annotation
+
+api_controllers:
+    host: 'api.connexion.fr'
+    resource: ../../src/ApiController/
     type: annotation

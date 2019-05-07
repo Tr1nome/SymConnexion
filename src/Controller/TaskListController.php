@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/task/list")
+ * @Route("/task/list", host="connexion.fr")
  */
 class TaskListController extends AbstractController
 {
