@@ -81,6 +81,26 @@ class ProductController extends AbstractFOSRestController
     }
 
     /**
+     * @Rest\Patch(
+     * path = "/{id}",
+     * name="productpatch_api",
+     * )
+     * @Rest\View()
+     */
+    public function patch(Request $request,Product $product): View
+    {
+        if($product) {
+            $form = $this->createForm(ProductType::class, $product);
+            $form->submit($request->request->all(), false);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($product);
+            $em->flush();
+        }
+        return View::create($product, Response::HTTP_CREATED);
+
+    }
+
+    /**
      * @Rest\Delete(
      *   path="/{id}",
      *   name="productdelete_api",
