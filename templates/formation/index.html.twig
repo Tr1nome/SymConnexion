@@ -19,7 +19,7 @@
         {% for formation in formations %}
 
             <tr>
-                <td>{% if formation.image %}<img src="{{asset(formation.image.imgPath)}}"class="img-thumbnail"style="height:100px;width:150px;"/>{% else %}Aucune image selectionnée{% endif %}</td>
+                <td>{% if formation.image %}<img src="{{asset(formation.image.imgPath)}}"class="img-thumbnail"style="height:100px;width:150px;" title="{{ asset(formation.image.alternative) }}"/>{% else %}Aucune image selectionnée{% endif %}</td>
                 <td>{{ formation.name }}</td>
                 <td>{{ formation.description }}</td>
                 <td>
