@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 /**
- * @Route("/formation")
+ * @Route("/formation", host="connexion.fr")
  */
 class FormationController extends AbstractController
 {
