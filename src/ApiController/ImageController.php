@@ -52,8 +52,8 @@ class ImageController extends AbstractFOSRestController
     public function create(Request $request): View
     {
         $image = new Image();
-        $image->setName($request->get('name'));
-        $image->setDescription($request->get('description'));
+        $image->setPath($request->get('path'));
+        $image->setImgPath($request->get('imgPath'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($image);
         $em->flush();
@@ -70,13 +70,13 @@ class ImageController extends AbstractFOSRestController
     public function edit(Request $request,Image $image): View
     {
         if($image) {
-            $image->setName($request->get('name'));
-            $image->setDescription($request->get('description'));
+            $image->setPath($request->get('path'));
+            $image->setImgPath($request->get('imgPath'));
             $em = $this->getDoctrine()->getManager();
             $em->persist($image);
             $em->flush();
         }
-        return View::create($formation, Response::HTTP_CREATED);
+        return View::create($image, Response::HTTP_CREATED);
 
     }
 

@@ -3,37 +3,25 @@
 {% block title %}Image index{% endblock %}
 
 {% block body %}
-    <h1>Image index</h1>
+    <h1>Portfolio</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Chemin</th>
-                <th>Aperçu</th>
-                <th>Alternative</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="container">
+
         {% for image in images %}
-            <tr>
-                <td>{{ image.id }}</td>
-                <td>{{ image.path }}</td>
-                <td><img src="{{asset(image.imgPath)}}" class="img-thumbnail" title="{{ image.alternative }}"/></td>
-                <td>{{ image.alternative }}</td>
-                <td>
+                <img src="{{asset(image.imgPath)}}" class="img-thumbnail" style="width:150px;height:auto;" title="{{ image.alternative }}"/>
+                    <div class="row">
+
                     <a href="{{ path('image_show', {'id': image.id}) }}">show</a>
+
                     <a href="{{ path('image_edit', {'id': image.id}) }}">edit</a>
-                </td>
-            </tr>
+
+                    </div>
         {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
+
+               no records found
+
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 
     <a href="{{ path('image_new') }}">Create new</a>
 {% endblock %}

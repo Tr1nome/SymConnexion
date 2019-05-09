@@ -25,7 +25,7 @@
                     <a class="nav-link" href="{{ path("formation_index") }}">Formations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Evenements</a>
+                    <a class="nav-link" href="{{ path("event_index") }}">Evenements</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path("task_list_index") }}">Tâches</a>
@@ -54,7 +54,7 @@
 
         </div>
     </nav>
-    <div class="container-fluid">
+    <div class="container">
         {% block body %}{% endblock %}
     </div>
     <div class="footer">
