@@ -3,6 +3,11 @@ controllers:
     resource: ../../src/Controller/
     type: annotation
 
+api_auth_login:
+    host: 'api.connexion.fr'
+    path: /login_check
+    methods: [POST]
+
 api_controllers:
     host: 'api.connexion.fr'
     resource: ../../src/ApiController/
