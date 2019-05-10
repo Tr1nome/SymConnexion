@@ -18,8 +18,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% if is_granted("IS_AUTHENTICATED_FULLY") and is_granted("ROLE_ADMIN") %}
-{{ path("accueilClass_indexAdmin") }}{% else %}{{ path("accueilClass_index") }} {% endif %}">Accueil</a>
+                    <a class="nav-link" href="{{ path("actu_index") }}">Accueil</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path("formation_index") }}">Formations</a>
@@ -31,7 +30,7 @@
                     <a class="nav-link" href="{{ path("task_list_index") }}">Tâches</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Portfolio</a>
+                    <a class="nav-link" href="{{ path("image_index") }}">Portfolio</a>
                 </li>
                 {% if is_granted("ROLE_USER") %}
                     <li class="nav-item dropdown">
@@ -49,6 +48,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path("fos_user_security_login") }}">Connexion</a>
                     </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path("fos_user_registration_register") }}">Inscription</a>
+                        </li>
                 {% endif %}
             </ul>
 
