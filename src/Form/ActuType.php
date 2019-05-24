@@ -6,6 +6,7 @@ use App\Entity\Actu;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 class ActuType extends AbstractType
 {
@@ -13,10 +14,14 @@ class ActuType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('content')
-        ;
+            ->add('content', CKEditorType::class, array(
+                'config' => array(
+                    'uiColor' => '#ffffff',
+                    //...
+                ),
+            ));
     }
-
+    
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

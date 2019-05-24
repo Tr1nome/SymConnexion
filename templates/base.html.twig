@@ -18,38 +18,40 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path("actu_index") }}">Accueil</a>
+                    <a class="nav-link" href="{{ path("actu_index") }}">Gestion des news</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path("formation_index") }}">Formations</a>
+                    <a class="nav-link" href="{{ path("formation_index") }}">Gestion des formations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path("event_index") }}">Evenements</a>
+                    <a class="nav-link" href="{{ path("event_index") }}">Gestion des évènements</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path("task_list_index") }}">Tâches</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path("image_index") }}">Portfolio</a>
+                    <a class="nav-link" href="{{ path("image_index") }}">Gestion des images</a>
                 </li>
                 {% if is_granted("ROLE_USER") %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ app.user.username }}
+                            <img src="{{ asset('app.user.imageId') }}" style="border-radius: 50%;width:30px;height:30px;"/> {{ app.user.username }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Mon compte</a>
-                            <a class="dropdown-item" href="#">Options</a>
+                            <a class="dropdown-item" href="{{ path("fos_user_profile_show") }}">Mon compte</a>
+                            <a class="dropdown-item" href="{{ path("fos_user_profile_edit") }}">Options</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ path("fos_user_security_logout") }}">Deconnexion</a>
                         </div>
                     </li>
+                    <div style="width:150px;">
+                    </div>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path("fos_user_security_login") }}">Connexion</a>
+                        <a class="nav-link float-right" href="{{ path("fos_user_security_login") }}">Connexion</a>
                     </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path("fos_user_registration_register") }}">Inscription</a>
+                            <a class="nav-link float-right" href="{{ path("fos_user_registration_register") }}">Inscription</a>
                         </li>
                 {% endif %}
             </ul>

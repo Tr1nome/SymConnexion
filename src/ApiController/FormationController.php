@@ -3,6 +3,9 @@
 namespace App\ApiController;
 
 use App\Entity\Formation;
+use App\Entity\Image;
+use App\Entity\User;
+use App\Form\ImageType;
 use App\Form\FormationType;
 use App\Repository\FormationRepository;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -51,11 +54,15 @@ class FormationController extends AbstractFOSRestController
      */
     public function create(Request $request): View
     {
+        $em = $this->getDoctrine()->getManager();
         $formation = new Formation();
+        $image = new Image();
         $formation->setName($request->get('name'));
         $formation->setDescription($request->get('description'));
-        $em = $this->getDoctrine()->getManager();
+        $formation->setImage($request->get('image'));
+        $formation->setUser($this->getUser());
         $em->persist($formation);
+        $em->persist($image);
         $em->flush();
         return View::create($formation, Response::HTTP_CREATED);
     }
@@ -87,14 +94,16 @@ class FormationController extends AbstractFOSRestController
      * )
      * @Rest\View()
      */
-    public function patch(Request $request,Formation $formation): View
+    public function patch(Request $request,Formation $formation, User $user): View
     {
-        if($formation) {
-            $form = $this->createForm(FormationType::class, $formation);
-            $form->submit($request->request->all(), false);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($formation);
-            $em->flush();
+        if($formation) {  
+        $user = $this->getUser();
+        $formation->addUser($user);
+        $form = $this->createForm(FormationType::class, $formation);
+        $form->submit($request->request->all(), true);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($formation);
+        $em->flush();  
         }
         return View::create($formation, Response::HTTP_CREATED);
 
@@ -116,5 +125,16 @@ class FormationController extends AbstractFOSRestController
         }
 
         return View::create([], Response::HTTP_NO_CONTENT);
+    }
+    /**
+     * @Rest\POST(
+     *   path="/{id}/registerTo",
+     *   name="formationregist_api",
+     * )
+     * @Rest\View()
+     */
+    public function inscription(Request $request, Formation $formation, User $user): View
+    {
+        $formation->addUser($request->get('user'));
     }
 }

@@ -8,14 +8,24 @@
     <div class="container">
 
         {% for image in images %}
-                <img src="{{asset(image.imgPath)}}" class="img-thumbnail" style="width:150px;height:auto;" title="{{ image.alternative }}"/>
-                    <div class="row">
-
+            <img src="{{asset(image.imgPath)}}" 
+            class="img-thumbnail" 
+            style="width:150px;height:auto;" 
+            title="{{ image.alternative }}"/>
+                <label class="switch">
+                    <input type="checkbox" autoComplete="On" [checked] = "{{ image.allowed == true }}" />
+                    <span class="slider round"></span>
+                </label>
                     <a href="{{ path('image_show', {'id': image.id}) }}">show</a>
 
                     <a href="{{ path('image_edit', {'id': image.id}) }}">edit</a>
-
-                    </div>
+                    {% if image.allowed %}
+                    <div style="color:green;">Image autorisée !</div>
+                    {% else %}
+                    <div style="color:red;">En attente...</div>
+                    {% endif %}
+                    
+                    
         {% else %}
 
                no records found

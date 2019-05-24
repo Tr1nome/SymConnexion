@@ -39,6 +39,7 @@ class ImageController extends AbstractController
             // $file stores the uploaded PDF file
             /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
             $file = $form->get('file')->getData();
+            $allowed = $form->get('allowed')->getData();
             if($file) {
                 $fileName = $this->generateUniqueFileName() . '.' . $file->guessExtension();
 
@@ -53,11 +54,17 @@ class ImageController extends AbstractController
                 }
                 $image->setPath($this->getParameter('images_directory') . '/' . $fileName);
                 $image->setImgPath($this->getParameter('images_path') . '/' . $fileName);
-
+            }
+            if($allowed) {
+                $image->setAllowed($allowed, true);
+            }
+            else {
+                $image->setAllowed($allowed, false);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($image);
+            //$entityManager->persist($allowed);
             $entityManager->flush();
 
             return $this->redirectToRoute('image_index');
@@ -89,12 +96,14 @@ class ImageController extends AbstractController
     {
         $form = $this->createForm(ImageType::class, $image);
         $form->handleRequest($request);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            
             // $file stores the uploaded PDF file
             /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
             $file = $form->get('file')->getData();
+            $allowed = $form->get('allowed')->getData();
 
             if($file) {
                 $fileName = $this->generateUniqueFileName() . '.' . $file->guessExtension();
@@ -111,8 +120,15 @@ class ImageController extends AbstractController
                 $this->removeFile($image->getPath());
                 $image->setPath($this->getParameter('images_directory') . '/' . $fileName);
                 $image->setImgPath($this->getParameter('images_path') . '/' . $fileName);
-
-
+                
+                $this->getDoctrine()->getManager()->flush();
+            }
+            if($allowed) {
+                $image->setAllowed($allowed, true);
+                $this->getDoctrine()->getManager()->flush();
+            }
+            else {
+                $image->setAllowed($allowed, false);
                 $this->getDoctrine()->getManager()->flush();
             }
             return $this->redirectToRoute('image_index', [

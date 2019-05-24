@@ -37,6 +37,11 @@ class Image
      */
     private $file;
 
+    /**
+     * @ORM\Column(name = "allowed", type="boolean", nullable=true, options={"default" : false})
+     */
+    private $allowed;
+
     public function getFile()
     {
         return $this->file;
@@ -87,6 +92,18 @@ class Image
     public function setAlternative(?string $alternative): self
     {
         $this->alternative = $alternative;
+
+        return $this;
+    }
+
+    public function getAllowed(): ?bool
+    {
+        return $this->allowed;
+    }
+
+    public function setAllowed(bool $allowed): self
+    {
+        $this->allowed = $allowed;
 
         return $this;
     }

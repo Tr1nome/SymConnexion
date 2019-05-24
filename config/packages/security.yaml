@@ -51,4 +51,6 @@ security:
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY, host: connexion\.fr }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY , host: connexion\.fr}
         - { path: ^/admin, role: ROLE_ADMIN, host: connexion\.fr }
-        - { path: ^/formation, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr }
+        - { path: ^/formation, role: ROLE_USER, host: api\.connexion\.fr }
+        - { path: ^/actu, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr }
+        - { path: ^/product, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr }

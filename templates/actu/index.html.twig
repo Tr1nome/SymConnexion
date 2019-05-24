@@ -19,7 +19,7 @@
             <tr>
                 <td>{{ actu.id }}</td>
                 <td>{{ actu.title }}</td>
-                <td>{{ actu.content }}</td>
+                <td>{% autoescape %} {{ actu.content|raw }} {% endautoescape %}</td>
                 <td>
                     <a href="{{ path('actu_show', {'id': actu.id}) }}">show</a>
                     <a href="{{ path('actu_edit', {'id': actu.id}) }}">edit</a>
