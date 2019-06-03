@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>Edit Image</h1>
-
+    <img src="http://connexion.fr/{{ image.imgPath }}"/>
     {{ include('image/_form.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('image_index') }}">back to list</a>

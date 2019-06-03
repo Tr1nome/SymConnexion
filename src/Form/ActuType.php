@@ -17,6 +17,8 @@ class ActuType extends AbstractType
             ->add('content', CKEditorType::class, array(
                 'config' => array(
                     'uiColor' => '#ffffff',
+                    'title' => 'title',
+                    'config.skin' => 'moono-dark'
                     //...
                 ),
             ));

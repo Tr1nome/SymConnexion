@@ -23,6 +23,9 @@ class ImageType extends AbstractType
                 ],
             ])
             ->add('alternative')
+            ->add('title')
+            ->add('description')
+            ->add('created_at')
         ;
     }
 

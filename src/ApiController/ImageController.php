@@ -4,7 +4,10 @@ namespace App\ApiController;
 
 use App\Entity\Image;
 use App\Form\ImageType;
+use App\Event\ImageCreatedEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use App\Repository\ImageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\View\View;
@@ -17,6 +20,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ImageController extends AbstractFOSRestController
 {
+    protected $dispatcher;
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
     /**
      * @Rest\Get(
      * path = "/",
@@ -72,10 +80,15 @@ class ImageController extends AbstractFOSRestController
             $image->setPath($this->getParameter('images_directory').'/'.$fileName);
             $image->setImgPath($this->getParameter('images_path').'/'.$fileName);
             $image->setAllowed(false);
-
+            //$image->setTitle($request->get('title'));
+            $image->setDescription($request->get('description'));
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($image);
             $entityManager->flush();
+            $imageEvent = new ImageCreatedEvent($image);
+            $this->dispatcher->dispatch('image.created', $imageEvent);
+            
         }
 
         return View::create($image, Response::HTTP_CREATED);

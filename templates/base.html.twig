@@ -27,10 +27,10 @@
                     <a class="nav-link" href="{{ path("event_index") }}">Gestion des évènements</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path("task_list_index") }}">Tâches</a>
+                    <a class="nav-link" href="{{ path("user_index") }}">Gestion des utilisateurs</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path("image_index") }}">Gestion des images</a>
+                    <a class="nav-link" href="{{ path("image_index") }}">Gestion des uploads</a>
                 </li>
                 {% if is_granted("ROLE_USER") %}
                     <li class="nav-item dropdown">
@@ -50,9 +50,9 @@
                     <li class="nav-item">
                         <a class="nav-link float-right" href="{{ path("fos_user_security_login") }}">Connexion</a>
                     </li>
-                        <li class="nav-item">
+                        <!--<li class="nav-item">
                             <a class="nav-link float-right" href="{{ path("fos_user_registration_register") }}">Inscription</a>
-                        </li>
+                        </li>-->
                 {% endif %}
             </ul>
 

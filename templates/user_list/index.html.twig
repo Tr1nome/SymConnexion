@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+    <h1>Gestion des utilisateurs</h1>
+    <label for="filterBy">Filter par :</label>
+    <select id="filterBy">
+    <option value="">--Aucune option choisie--</option>
+    <option value="id">ID</option>
+    <option value="username">Nom d'utilisateur</option>
+    <option value="email">Email</option>
+    <option value="custom">Custom</option>
+    </select>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom d'utilisateur</th>
+                <th>Adresse Mail</th>
+                <th>Inscrit ?</th>
+                <th>actions</th>
+                <th>Actions admin</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+
+            <tr>
+                <td>{{ user.id }}</td>
+                <td><p style="color:black;font-weight:bold;">{{ user.username }}</p></td>
+                <td><p style="color:red;font-weight:bold;">{{ user.email }}</p></td>
+                <td>{% if user.enabled %}<p style="color:green">Oui</p>{% else %}<p style="color:red">Non</p>{% endif %}</td>
+                <td>Aucune action pour l'instant</td>
+                <td>Aucune action pour l'instant</td>
+            </tr>
+
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+            <hr style="color:black;">
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+{% endblock %}

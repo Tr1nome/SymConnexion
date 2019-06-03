@@ -93,6 +93,9 @@
     "egulias/email-validator": {
         "version": "2.1.7"
     },
+    "egyg33k/csv-bundle": {
+        "version": "1.0.1"
+    },
     "facebook/webdriver": {
         "version": "1.6.0"
     },
@@ -126,8 +129,17 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "knplabs/knp-components": {
+        "version": "v1.3.10"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v3.0.0"
+    },
     "lcobucci/jwt": {
         "version": "3.2.5"
+    },
+    "league/csv": {
+        "version": "9.2.0"
     },
     "lexik/jwt-authentication-bundle": {
         "version": "2.5",
@@ -140,6 +152,12 @@
         "files": [
             "config/packages/lexik_jwt_authentication.yaml"
         ]
+    },
+    "markbaker/complex": {
+        "version": "1.4.7"
+    },
+    "markbaker/matrix": {
+        "version": "1.1.4"
     },
     "monolog/monolog": {
         "version": "1.24.0"
@@ -173,6 +191,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpoffice/phpspreadsheet": {
+        "version": "1.6.0"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -555,6 +576,9 @@
     },
     "willdurand/negotiation": {
         "version": "v2.3.1"
+    },
+    "yectep/phpspreadsheet-bundle": {
+        "version": "v0.0.6"
     },
     "zendframework/zend-code": {
         "version": "3.3.1"

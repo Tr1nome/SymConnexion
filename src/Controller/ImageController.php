@@ -5,23 +5,139 @@ namespace App\Controller;
 use App\Entity\Image;
 use App\Form\ImageType;
 use App\Repository\ImageRepository;
+use App\Event\ImageCreatedEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/image")
  */
 class ImageController extends AbstractController
 {
+    protected $dispatcher;
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
+
     /**
      * @Route("/", name="image_index", methods={"GET"})
      */
-    public function index(ImageRepository $imageRepository): Response
+    public function index(Request $request,ImageRepository $imageRepository, PaginatorInterface $paginator): Response
     {
+        $allImagesQuery = $imageRepository->createQueryBuilder('p')
+            ->where('p.imgPath IS NOT NULL')
+            ->getQuery();
+        $images = $paginator->paginate(
+            $allImagesQuery,
+            $request->query->getInt('page', 1),
+            // Items per page
+            3
+        );
         return $this->render('image/index.html.twig', [
-            'images' => $imageRepository->findAll(),
+            'images' => $images,
+        ]);
+    }
+
+    /**
+     * @Route("/commented", name="image_activated", methods={"GET"})
+     */
+    public function imageActivated(Request $request,ImageRepository $imageRepository, PaginatorInterface $paginator): Response
+    {
+        $allImagesQuery = $imageRepository->createQueryBuilder('p')
+            ->where('p.alternative IS NOT NULL')
+            ->getQuery();
+        $images = $paginator->paginate(
+            $allImagesQuery,
+            $request->query->getInt('page', 1),
+            // Items per page
+            5
+        );
+        return $this->render('image/index.html.twig', [
+            'images' => $images,
+        ]);
+    }
+
+    /**
+     * @Route("/pending", name="image_pending", methods={"GET"})
+     */
+    public function imagePending(Request $request,ImageRepository $imageRepository, PaginatorInterface $paginator): Response
+    {
+        $allImagesQuery = $imageRepository->createQueryBuilder('p')
+            ->where('p.allowed = false')
+            ->getQuery();
+        $images = $paginator->paginate(
+            $allImagesQuery,
+            $request->query->getInt('page', 1),
+            // Items per page
+            5
+        );
+        return $this->render('image/index.html.twig', [
+            'images' => $images,
+        ]);
+    }
+
+    /**
+     * @Route("/allowedonly", name="image_allowed", methods={"GET"})
+     */
+    public function imageAllowed(Request $request,ImageRepository $imageRepository, PaginatorInterface $paginator): Response
+    {
+        $allImagesQuery = $imageRepository->createQueryBuilder('p')
+            ->where('p.allowed = true')
+            ->getQuery();
+        $images = $paginator->paginate(
+            $allImagesQuery,
+            $request->query->getInt('page', 1),
+            // Items per page
+            5
+        );
+        return $this->render('image/index.html.twig', [
+            'images' => $images,
+        ]);
+    }
+
+    /**
+     * @Route("/orderAsc", name="image_order_high", methods={"GET"})
+     */
+    public function imageOrderHigh(Request $request,ImageRepository $imageRepository, PaginatorInterface $paginator): Response
+    {
+        $allImagesQuery = $imageRepository->createQueryBuilder('p')
+            ->where('p.allowed = true')
+            ->orderBy('p.id', 'ASC')
+            ->getQuery();
+        $images = $paginator->paginate(
+            $allImagesQuery,
+            $request->query->getInt('page', 1),
+            // Items per page
+            5
+        );
+        return $this->render('image/index.html.twig', [
+            'images' => $images,
+        ]);
+    }
+
+    /**
+     * @Route("/orderDesc", name="image_order_low", methods={"GET"})
+     */
+    public function imageOrderLow(Request $request,ImageRepository $imageRepository, PaginatorInterface $paginator): Response
+    {
+        $allImagesQuery = $imageRepository->createQueryBuilder('p')
+            ->where('p.allowed = true')
+            ->orderBy('p.id', 'DESC')
+            ->getQuery();
+        $images = $paginator->paginate(
+            $allImagesQuery,
+            $request->query->getInt('page', 1),
+            // Items per page
+            5
+        );
+        return $this->render('image/index.html.twig', [
+            'images' => $images,
         ]);
     }
 
@@ -40,6 +156,9 @@ class ImageController extends AbstractController
             /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
             $file = $form->get('file')->getData();
             $allowed = $form->get('allowed')->getData();
+            $title = $form->get('title')->getData();
+            $description = $form->get('description')->getData();
+
             if($file) {
                 $fileName = $this->generateUniqueFileName() . '.' . $file->guessExtension();
 
@@ -62,7 +181,13 @@ class ImageController extends AbstractController
                 $image->setAllowed($allowed, false);
             }
 
+            $image->setTitle($title);
+            $image->setDescription($description);
+
             $entityManager = $this->getDoctrine()->getManager();
+            //
+            $imageEvent = new ImageCreatedEvent($image);
+            $this->dispatcher->dispatch('image.created', $imageEvent);
             $entityManager->persist($image);
             //$entityManager->persist($allowed);
             $entityManager->flush();
@@ -142,6 +267,23 @@ class ImageController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/{id}/comfirm", name="image_allow", methods={"GET","POST"})
+     */
+    public function toggleAllowed(Image $image): Response
+    {
+        $allowed = $image->getAllowed();
+        if($allowed){
+            $image->setAllowed(false);
+            $this->getDoctrine()->getManager()->flush();
+        }
+        else{
+            $image->setAllowed(true);
+            $this->getDoctrine()->getManager()->flush();
+        }
+        
+        return $this->redirectToRoute('image_index');
+    }
     /**
      * @Route("/{id}", name="image_delete", methods={"DELETE"})
      */

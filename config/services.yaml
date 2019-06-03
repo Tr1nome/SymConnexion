@@ -48,3 +48,18 @@ services:
     form.type.model.ListItemType:
         class : App\Form\ListItemType
         arguments: ["@doctrine.orm.entity_manager"]
+
+    app.form.registration:
+        class: App\Form\RegistrationType
+        tags:
+            - { name: form.type, alias: app_user_registration }
+
+    controller.user:
+        class: App\Controller\UserController
+        arguments: ["@fos_user.user_manager"]
+
+    fos_user.password_resetting:
+        class: App\EventListener\PasswordResettingListener
+        arguments: ['@router']
+        tags:
+            - { name: kernel.event_subscriber }

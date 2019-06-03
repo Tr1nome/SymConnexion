@@ -14,6 +14,9 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use App\ApiController\AuthController;
 
 /**
  * @Route("/formation", host="api.connexion.fr")
@@ -42,6 +45,7 @@ class FormationController extends AbstractFOSRestController
      */
     public function show(Formation $formation): View
     {
+        $formation = $this->normalize($formation);
         return View::create($formation, Response::HTTP_OK);
     }
 
@@ -127,14 +131,35 @@ class FormationController extends AbstractFOSRestController
         return View::create([], Response::HTTP_NO_CONTENT);
     }
     /**
-     * @Rest\POST(
+     * @Rest\Patch(
      *   path="/{id}/registerTo",
      *   name="formationregist_api",
      * )
      * @Rest\View()
      */
-    public function inscription(Request $request, Formation $formation, User $user): View
+    public function inscription(Request $request, Formation $formation, User $user, AuthController $controller): View
     {
-        $formation->addUser($request->get('user'));
+        
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
+        $formation = $this->normalize($formation);
+        return View::create($formation, Response::HTTP_CREATED);
+    }
+
+    private function normalize($object)
+    {
+        /* Serializer, normalizer exemple */
+
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $object = $serializer->normalize($object, null,
+            ['attributes' => [
+                'id',
+                'name',
+                'description',
+                'user' => ['id','username'],
+                'image'=> ['id'],
+                
+            ]]);
+        return $object;
     }
 }
