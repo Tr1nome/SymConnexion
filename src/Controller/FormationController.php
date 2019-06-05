@@ -27,7 +27,6 @@ class FormationController extends AbstractController
             'formations' => $formationRepository->findAll(),
         ]);
     }
-
     /**
      * @Route("/new", name="formation_new", methods={"GET","POST"})
      */
@@ -182,5 +181,33 @@ class FormationController extends AbstractController
             unlink($path);
 
         }
+    }
+    /**
+     * @Route("export", name="formation_export")
+     */
+    public function export():Response
+    {
+        header("Content-Type: text/csv; charset=UTF-8");
+        header("Content-Type: text/csv");
+        header("Content-disposition: filename=Liste d'utilisateurs.");
+        $entete = array("Nom", "Prénom", "Age");
+
+        
+        $lignes = array();
+        $lignes[] = array("Jean", "Martin", "20");
+        $lignes[] = array("Pierre", "Dupond", "30");
+
+        $separateur = "/";
+
+        
+        echo implode($separateur, $entete)."\r\n";
+
+        
+        foreach ($lignes as $ligne) {
+            echo implode($separateur, $ligne)."\r\n";
+        }
+        $this->export();
+        return $this->redirectToRoute('formation_index');
+        
     }
 }

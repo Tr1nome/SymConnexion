@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ImageType extends AbstractType
 {
@@ -14,7 +15,17 @@ class ImageType extends AbstractType
     {
         $builder
             ->add('file',FileType::class,array('label' => 'image','required' => false))
+            ->add('allowed', ChoiceType::class, [
+                'label'=> 'Autoriser ?',
+                'choices'  => [
+                    'Oui' => true,
+                    'Non' => false,
+                ],
+            ])
             ->add('alternative')
+            ->add('title')
+            ->add('description')
+            ->add('created_at')
         ;
     }
 

@@ -93,11 +93,26 @@
     "egulias/email-validator": {
         "version": "2.1.7"
     },
+    "egyg33k/csv-bundle": {
+        "version": "1.0.1"
+    },
     "facebook/webdriver": {
         "version": "1.6.0"
     },
     "fig/link-util": {
         "version": "1.0.0"
+    },
+    "friendsofsymfony/ckeditor-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "8eb1cd0962ded6a6d6e1e5a9b6d3e888f9f94ff6"
+        },
+        "files": [
+            "config/packages/fos_ckeditor.yaml"
+        ]
     },
     "friendsofsymfony/rest-bundle": {
         "version": "2.2",
@@ -114,8 +129,17 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "knplabs/knp-components": {
+        "version": "v1.3.10"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v3.0.0"
+    },
     "lcobucci/jwt": {
         "version": "3.2.5"
+    },
+    "league/csv": {
+        "version": "9.2.0"
     },
     "lexik/jwt-authentication-bundle": {
         "version": "2.5",
@@ -129,11 +153,29 @@
             "config/packages/lexik_jwt_authentication.yaml"
         ]
     },
+    "markbaker/complex": {
+        "version": "1.4.7"
+    },
+    "markbaker/matrix": {
+        "version": "1.1.4"
+    },
     "monolog/monolog": {
         "version": "1.24.0"
     },
     "namshi/jose": {
         "version": "7.2.3"
+    },
+    "nelmio/cors-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "f0436fc35fca88eada758311f8de43bfb61f1980"
+        },
+        "files": [
+            "config/packages/nelmio_cors.yaml"
+        ]
     },
     "nikic/php-parser": {
         "version": "v4.2.1"
@@ -149,6 +191,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpoffice/phpspreadsheet": {
+        "version": "1.6.0"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -531,6 +576,9 @@
     },
     "willdurand/negotiation": {
         "version": "v2.3.1"
+    },
+    "yectep/phpspreadsheet-bundle": {
+        "version": "v0.0.6"
     },
     "zendframework/zend-code": {
         "version": "3.3.1"

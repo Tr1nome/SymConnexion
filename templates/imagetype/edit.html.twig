@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Imagetype{% endblock %}
+
+{% block body %}
+    <h1>Edit Imagetype</h1>
+    
+    {{ include('imagetype/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('imagetype_index') }}">back to list</a>
+
+    {{ include('imagetype/_delete_form.html.twig') }}
+{% endblock %}

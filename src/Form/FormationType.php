@@ -15,6 +15,8 @@ class FormationType extends AbstractType
             ->add('name')
             ->add('description')
             ->add('image',ImageType::class)
+            ->add('user', null,array
+            ('expanded'=>true,'multiple'=>true))
         ;
     }
 
