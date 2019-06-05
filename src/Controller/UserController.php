@@ -36,4 +36,19 @@ class UserController extends AbstractController{
             'users' => $user,
         ]);
     }
+
+    /**
+     * @Route("/allow", name="user_confirm", methods={"GET"})
+     */
+    public function allow(User $user): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user->setEnabled(true);
+        $em->persist($user);
+        $em->flush();
+        
+        return $this->render('user_list/index.html.twig', [
+            'users' => $user,
+        ]);
+    }
 }

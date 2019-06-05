@@ -68,7 +68,7 @@ class AuthController extends AbstractFOSRestController
     public function profile()
     {
         $user = $this->getUser();
-        $user = $this->normalize($user);
+        //$user = $this->normalize($user);
         return View::create($user, Response::HTTP_OK);
         
     }

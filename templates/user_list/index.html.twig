@@ -19,7 +19,6 @@
                 <th>Nom d'utilisateur</th>
                 <th>Adresse Mail</th>
                 <th>Inscrit ?</th>
-                <th>actions</th>
                 <th>Actions admin</th>
             </tr>
         </thead>
@@ -30,9 +29,8 @@
                 <td>{{ user.id }}</td>
                 <td><p style="color:black;font-weight:bold;">{{ user.username }}</p></td>
                 <td><p style="color:red;font-weight:bold;">{{ user.email }}</p></td>
-                <td>{% if user.enabled %}<p style="color:green">Oui</p>{% else %}<p style="color:red">Non</p>{% endif %}</td>
-                <td>Aucune action pour l'instant</td>
-                <td>Aucune action pour l'instant</td>
+                <td>{% if user.enabled %}<p style="color:green">Oui</p>{% else %}
+                <a class="btn-success" href="{{ path('user_confirm')}}">Confirmer l'utilisateur</a>{% endif %}</td>
             </tr>
 
         {% else %}

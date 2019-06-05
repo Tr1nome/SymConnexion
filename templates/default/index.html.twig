@@ -9,12 +9,23 @@
 
     <h1>Bienvenue sur Fenrir Studio !</h1>
 
-    <p>Un paragraphe aléatoire !</p>
+    <p>Espace administrateur !</p>
 
 
 {% if is_granted("IS_AUTHENTICATED_FULLY") %}
     <h3>Connecté {{ app.user.username }}{% if is_granted("ROLE_ADMIN") %} en tant qu'administrateur{% endif %}</h3>
     {% endif %}
+
+<div class="container">
+    <div class="row">
+       <img src="{{ asset('img/icon.png')}}"/> 
+    </div>
+    <div class="row">
+        <div style="height:270px;"></div>
+    </div>
+
+</div>
+
 
 {% endblock %}
 

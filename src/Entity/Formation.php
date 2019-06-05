@@ -87,22 +87,11 @@ class Formation
     /**
      * @return Collection|User[]
      */
-    public function getUser(): Collection
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function addUser(User $user): self
     {
         if (!$this->user->contains($user)) {
             $this->user[] = $user;
+            $user->addFormation($this);
         }
 
         return $this;
@@ -113,6 +102,21 @@ class Formation
         if ($this->user->contains($user)) {
             $this->user->removeElement($user);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUser(): Collection
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -14,6 +14,8 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/image", host="api.connexion.fr")
@@ -35,7 +37,8 @@ class ImageController extends AbstractFOSRestController
     public function index(ImageRepository $imageRepository): View
     {
         $image = $imageRepository->findAll();
-        return View::create($image, Response::HTTP_OK);
+        $images = $this->normalize($image);
+        return View::create($images, Response::HTTP_OK);
     }
 
     /**
@@ -47,6 +50,7 @@ class ImageController extends AbstractFOSRestController
      */
     public function show(Image $image): View
     {
+        $image = $this->normalize($image);
         return View::create($image, Response::HTTP_OK);
     }
 
@@ -81,7 +85,7 @@ class ImageController extends AbstractFOSRestController
             $image->setImgPath($this->getParameter('images_path').'/'.$fileName);
             $image->setAllowed(false);
             //$image->setTitle($request->get('title'));
-            $image->setDescription($request->get('description'));
+            //$image->setDescription($request->get('description'));
             
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($image);
@@ -160,5 +164,25 @@ class ImageController extends AbstractFOSRestController
         }
 
         return View::create([], Response::HTTP_NO_CONTENT);
+    }
+
+    private function normalize($object)
+    {
+        /* Serializer, normalizer exemple */
+
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $object = $serializer->normalize($object, null,
+            ['attributes' => [
+                'id',
+                'file',
+                'path',
+                'imgPath',
+                'title',
+                'description',
+                'alternative',
+                'allowed'
+                
+            ]]);
+        return $object;
     }
 }

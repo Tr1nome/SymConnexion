@@ -11,6 +11,8 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/event", host="api.connexion.fr")
@@ -27,7 +29,8 @@ class EventController extends AbstractFOSRestController
     public function index(EventRepository $eventRepository): View
     {
         $event = $eventRepository->findAll();
-        return View::create($event, Response::HTTP_OK);
+        $mevent = $this->normalize($event);
+        return View::create($mevent, Response::HTTP_OK);
     }
 
     /**
@@ -39,7 +42,8 @@ class EventController extends AbstractFOSRestController
      */
     public function show(Event $event): View
     {
-        return View::create($event, Response::HTTP_OK);
+        $mevent = $this->normalize($event);
+        return View::create($mevent, Response::HTTP_OK);
     }
 
     /**
@@ -116,5 +120,22 @@ class EventController extends AbstractFOSRestController
         }
 
         return View::create([], Response::HTTP_NO_CONTENT);
+    }
+
+    private function normalize($object)
+    {
+        /* Serializer, normalizer exemple */
+
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $object = $serializer->normalize($object, null,
+            ['attributes' => [
+                'id',
+                'name',
+                'description',
+                'user' => ['id','username','image'=>['id','path','imgPath','alternative']],
+                'image'=> ['id','file','path','imgPath'],
+                
+            ]]);
+        return $object;
     }
 }

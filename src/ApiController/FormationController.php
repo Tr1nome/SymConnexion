@@ -33,7 +33,8 @@ class FormationController extends AbstractFOSRestController
     public function index(FormationRepository $formationRepository): View
     {
         $formations = $formationRepository->findAll();
-        return View::create($formations, Response::HTTP_OK);
+        $formation = $this->normalize($formations);
+        return View::create($formation, Response::HTTP_OK);
     }
 
     /**
@@ -65,6 +66,7 @@ class FormationController extends AbstractFOSRestController
         $formation->setDescription($request->get('description'));
         $formation->setImage($request->get('image'));
         $formation->setUser($this->getUser());
+        $image->setAllowed(false);
         $em->persist($formation);
         $em->persist($image);
         $em->flush();
@@ -101,17 +103,33 @@ class FormationController extends AbstractFOSRestController
     public function patch(Request $request,Formation $formation, User $user): View
     {
         if($formation) {  
-        $user = $this->getUser();
-        $formation->addUser($user);
-        $form = $this->createForm(FormationType::class, $formation);
-        $form->submit($request->request->all(), true);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($formation);
-        $em->flush();  
+            $user = $this->getUser();
+            $formation->addUser($user);
+            $form = $this->createForm(FormationType::class, $formation);
+            $form->submit($request->request->all(), true);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($formation);
+            $em->flush();  
         }
         return View::create($formation, Response::HTTP_CREATED);
 
     }
+
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/register",
+     * name="formationreg_api",
+     * )
+     * @Rest\View()
+     */
+    public function register(Formation $formation, User $user, Request $request): View
+    {
+        $user = $request->get('user');
+        $formation->addUser($user);
+        $formations = $this->normalize($formation);
+        return View::create($formations, Response::HTTP_CREATED);
+    }
+
 
     /**
      * @Rest\Delete(
@@ -130,21 +148,6 @@ class FormationController extends AbstractFOSRestController
 
         return View::create([], Response::HTTP_NO_CONTENT);
     }
-    /**
-     * @Rest\Patch(
-     *   path="/{id}/registerTo",
-     *   name="formationregist_api",
-     * )
-     * @Rest\View()
-     */
-    public function inscription(Request $request, Formation $formation, User $user, AuthController $controller): View
-    {
-        
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->flush();
-        $formation = $this->normalize($formation);
-        return View::create($formation, Response::HTTP_CREATED);
-    }
 
     private function normalize($object)
     {
@@ -156,8 +159,8 @@ class FormationController extends AbstractFOSRestController
                 'id',
                 'name',
                 'description',
-                'user' => ['id','username'],
-                'image'=> ['id'],
+                'user' => ['id','username','image'=>['id','file','path','imgPath']],
+                'image'=> ['id','file','path','imgPath'],
                 
             ]]);
         return $object;
