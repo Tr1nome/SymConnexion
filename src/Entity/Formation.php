@@ -84,9 +84,6 @@ class Formation
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
     public function addUser(User $user): self
     {
         if (!$this->user->contains($user)) {

@@ -4,14 +4,6 @@
 
 {% block body %}
     <h1>Gestion des utilisateurs</h1>
-    <label for="filterBy">Filter par :</label>
-    <select id="filterBy">
-    <option value="">--Aucune option choisie--</option>
-    <option value="id">ID</option>
-    <option value="username">Nom d'utilisateur</option>
-    <option value="email">Email</option>
-    <option value="custom">Custom</option>
-    </select>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -42,5 +34,5 @@
         </tbody>
 
     </table>
-
+        <div style="display:flex; justify-content:center;">{{ knp_pagination_render(users) }}</div>
 {% endblock %}

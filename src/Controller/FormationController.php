@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Knp\Component\Pager\PaginatorInterface;
+use Exporter\Handler;
+use Exporter\Source\PDOStatementSourceIterator;
+use Exporter\Writer\CsvWriter;
 
 /**
  * @Route("/formation", host="connexion.fr")
@@ -21,10 +25,19 @@ class FormationController extends AbstractController
     /**
      * @Route("/", name="formation_index", methods={"GET"})
      */
-    public function index(FormationRepository $formationRepository): Response
+    public function index(Request $request, FormationRepository $formationRepository, PaginatorInterface $paginator): Response
     {
+        $allFormationsQuery = $formationRepository->createQueryBuilder('p')
+            ->where('p.description IS NOT NULL')
+            ->getQuery();
+        $formations = $paginator->paginate(
+            $allFormationsQuery,
+            $request->query->getInt('page', 1),
+            // Items per page
+            3
+        );
         return $this->render('formation/index.html.twig', [
-            'formations' => $formationRepository->findAll(),
+            'formations' => $formations,
         ]);
     }
     /**
@@ -187,27 +200,17 @@ class FormationController extends AbstractController
      */
     public function export():Response
     {
-        header("Content-Type: text/csv; charset=UTF-8");
-        header("Content-Type: text/csv");
-        header("Content-disposition: filename=Liste d'utilisateurs.");
-        $entete = array("Nom", "Prénom", "Age");
+    // Prepare the data source
+    $dbh = new \PDO('mysql:host="127.0.0.1",port="3306",dbname="connexion"');
+    $stm = $dbh->prepare('SELECT id, username, email FROM user');
+    $stm->execute();
 
-        
-        $lignes = array();
-        $lignes[] = array("Jean", "Martin", "20");
-        $lignes[] = array("Pierre", "Dupond", "30");
+    $source = new PDOStatementSourceIterator($stm);
 
-        $separateur = "/";
+    // Prepare the writer
+    $writer = new CsvWriter('data.csv');
 
-        
-        echo implode($separateur, $entete)."\r\n";
-
-        
-        foreach ($lignes as $ligne) {
-            echo implode($separateur, $ligne)."\r\n";
-        }
-        $this->export();
-        return $this->redirectToRoute('formation_index');
-        
+    // Export the data
+    Handler::create($source, $writer)->export();
     }
 }

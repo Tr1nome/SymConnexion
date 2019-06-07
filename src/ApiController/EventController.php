@@ -4,6 +4,7 @@ namespace App\ApiController;
 
 use App\Entity\Event;
 use App\Form\EventType;
+use App\Entity\User;
 use App\Repository\EventRepository;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -103,6 +104,42 @@ class EventController extends AbstractFOSRestController
         return View::create($event, Response::HTTP_CREATED);
 
     }
+
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/register",
+     * name="eventregister_api",
+     * )
+     * @Rest\View()
+     */
+    public function register(Request $request,Event $event, User $user): View
+    {
+        $event->addUser($this->getUser());
+        $events = $this->normalize($event);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($event);
+        $em->flush();
+        return View::create($events, Response::HTTP_CREATED);
+
+    }
+
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/leave",
+     * name="eventunreg_api",
+     * )
+     * @Rest\View()
+     */
+    public function leave(Event $event, User $user, Request $request): View
+    {
+        $event->removeUser($this->getUser());
+        $events = $this->normalize($event);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($event);
+        $entityManager->flush();
+        return View::create($events, Response::HTTP_CREATED);
+    }
+
 
     /**
      * @Rest\Delete(

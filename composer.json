@@ -12,6 +12,7 @@
         "lexik/jwt-authentication-bundle": "^2.6",
         "nelmio/cors-bundle": "^1.5",
         "sensio/framework-extra-bundle": "^5.1",
+        "sonata-project/exporter": "^2.0",
         "symfony/asset": "4.2.*",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",

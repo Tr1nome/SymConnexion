@@ -12,12 +12,8 @@
                 <td>{{ image.id }}</td>
             </tr>
             <tr>
-                <th>Path</th>
-                <td>{{ image.path }}</td>
-            </tr>
-            <tr>
-                <th>ImgPath</th>
-                <td>{{ image.imgPath }}</td>
+                <th>Prévisualisation</th>
+                <td><img src="{{ asset(image.imgPath) }}"/></td>
             </tr>
             <tr>
                 <th>Alternative</th>

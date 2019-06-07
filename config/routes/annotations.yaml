@@ -1,9 +1,3 @@
-to_fenrir:
-    path: /
-    host: 'connexion.fr'
-    defaults:
-        url: 'http://localhost:4200/actu'
-
 controllers:
     host: 'connexion.fr'
     resource: ../../src/Controller/

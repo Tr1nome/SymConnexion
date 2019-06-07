@@ -37,7 +37,7 @@ class ImageController extends AbstractController
             $allImagesQuery,
             $request->query->getInt('page', 1),
             // Items per page
-            3
+            4
         );
         return $this->render('image/index.html.twig', [
             'images' => $images,
