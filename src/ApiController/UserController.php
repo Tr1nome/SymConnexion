@@ -48,6 +48,7 @@ class UserController extends AbstractFOSRestController
     {
         return View::create($user, Response::HTTP_OK);
     }
+    
     /**
      * Edit a User
      * @Rest\Patch(
@@ -58,28 +59,32 @@ class UserController extends AbstractFOSRestController
      * @Rest\View()
      * @return View;
      */
-    public function edit(Request $request, User $user, ImageRepository $imageRepository): View
+    public function edit(Request $request, User $user): Response
     {
-        if ($user){
-            $em = $this->getDoctrine()->getManager();
-            if (!empty($request->get('image')))
-            {
-                $currentImage = $user->getImage();
-                if (!empty($currentImage)){
-                    if($currentImage){
-                        $this->removeFile($currentImage->getPath());
-                        $em->remove($currentImage);
-                        $user->setImage(null);
-                    }
-                }
-                $image = $imageRepository->find($request->get('image'));
-                $user->setImage($image);
+        $entityManager = $this->getDoctrine()->getManager();
+        $image = $user->getImage();
+        $file = $request->get('image')->get('file')->getData();
+        if ($file){
+            $fileName = $this->generateUniqueFileName().'.'. $file->guessExtension();
+            // Move the file to the directory where brochures are stored
+            try {
+                $file->move(
+                    $this->getParameter('images_directory'), $fileName
+                );
+            } catch (FileException $e) {
+                // ... handle exception if something happens during file upload
             }
-            $em->persist($user);
-            $em->flush();
+            $this->removeFile($image->getPath());
+            $image->setPath($this->getParameter('images_directory').'/'.$fileName) ;
+            $image->setImgpath($this->getParameter('images_path').'/'.$fileName);
+            $entityManager->persist($image);
+            echo($image);
         }
-        return View::create($user, Response::HTTP_OK);
+        if (empty($image->getId()) && !$file ) {
+            $user->setImage(null);
+        }
     }
+
 
     private function removeFile($path)
     {

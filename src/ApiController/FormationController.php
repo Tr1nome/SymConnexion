@@ -1,15 +1,15 @@
 <?php
-
 namespace App\ApiController;
-
 use App\Entity\Formation;
 use App\Entity\Image;
 use App\Entity\User;
+use App\Event\InscriptionEvent;
 use App\Form\ImageType;
 use App\Form\FormationType;
 use App\Repository\FormationRepository;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,12 +17,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use App\ApiController\AuthController;
-
+use FOS\UserBundle\Model\UserManagerInterface;
+use FOS\UserBundle\Doctrine\UserManager;
 /**
  * @Route("/formation", host="api.connexion.fr")
  */
 class FormationController extends AbstractFOSRestController
 {
+    protected $dispatcher;
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
     /**
      * @Rest\Get(
      * path = "/",
@@ -36,7 +42,6 @@ class FormationController extends AbstractFOSRestController
         $formation = $this->normalize($formations);
         return View::create($formation, Response::HTTP_OK);
     }
-
     /**
      * @Rest\Get(
      * path = "/{id}",
@@ -49,7 +54,6 @@ class FormationController extends AbstractFOSRestController
         $formation = $this->normalize($formation);
         return View::create($formation, Response::HTTP_OK);
     }
-
     /**
      * @Rest\Post(
      * path = "/new",
@@ -72,7 +76,6 @@ class FormationController extends AbstractFOSRestController
         $em->flush();
         return View::create($formation, Response::HTTP_CREATED);
     }
-
     /**
      * @Rest\Put(
      * path = "/{id}",
@@ -90,9 +93,7 @@ class FormationController extends AbstractFOSRestController
             $em->flush();
         }
         return View::create($formation, Response::HTTP_CREATED);
-
     }
-
     /**
      * @Rest\Patch(
      * path = "/{id}",
@@ -112,9 +113,7 @@ class FormationController extends AbstractFOSRestController
             $em->flush();  
         }
         return View::create($formation, Response::HTTP_CREATED);
-
     }
-
     /**
      * @Rest\Patch(
      * path = "/{id}/register",
@@ -122,15 +121,33 @@ class FormationController extends AbstractFOSRestController
      * )
      * @Rest\View()
      */
-    public function register(Formation $formation, User $user, Request $request): View
+    public function register(Formation $formation, Request $request): View
     {
-        $user = $request->get('user');
-        $formation->addUser($user);
+        $formation->addUser($this->getUser());
         $formations = $this->normalize($formation);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($formation);
+        $entityManager->flush();
+        //$formationEvent = new InscriptionEvent($formation,$user);
+        //$this->dispatcher->dispatch('formation.updated', $formationEvent);
         return View::create($formations, Response::HTTP_CREATED);
     }
-
-
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/leave",
+     * name="formationunreg_api",
+     * )
+     * @Rest\View()
+     */
+    public function leave(Formation $formation, Request $request): View
+    {
+        $formation->removeUser($this->getUser());
+        $formations = $this->normalize($formation);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($formation);
+        $entityManager->flush();
+        return View::create($formations, Response::HTTP_CREATED);
+    }
     /**
      * @Rest\Delete(
      *   path="/{id}",
@@ -145,14 +162,11 @@ class FormationController extends AbstractFOSRestController
             $entityManager->remove($formation);
             $entityManager->flush();
         }
-
         return View::create([], Response::HTTP_NO_CONTENT);
     }
-
     private function normalize($object)
     {
         /* Serializer, normalizer exemple */
-
         $serializer = new Serializer([new ObjectNormalizer()]);
         $object = $serializer->normalize($object, null,
             ['attributes' => [
@@ -161,6 +175,7 @@ class FormationController extends AbstractFOSRestController
                 'description',
                 'user' => ['id','username','image'=>['id','file','path','imgPath']],
                 'image'=> ['id','file','path','imgPath'],
+                'day',
                 
             ]]);
         return $object;

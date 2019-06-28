@@ -195,9 +195,6 @@ class ImageController extends AbstractController
             return $this->redirectToRoute('image_index');
         }
 
-
-
-
         return $this->render('image/new.html.twig', [
             'image' => $image,
             'form' => $form->createView(),

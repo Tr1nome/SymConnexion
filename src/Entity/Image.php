@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
@@ -53,9 +56,31 @@ class Image
     private $description;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
-    private $created_at;
+    private $createdAt;
+
+    /**
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="images")
+     */
+    private $likedBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="photos")
+     */
+    private $uploadedBy;
+
+    public function __construct()
+    {
+        $this->likedBy = new ArrayCollection();
+    }
 
     public function getFile()
     {
@@ -146,17 +171,58 @@ class Image
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
     {
-        $this->created_at = $created_at;
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getLikedBy(): Collection
+    {
+        return $this->likedBy;
+    }
+
+    public function addLikedBy(User $likedBy): self
+    {
+        if (!$this->likedBy->contains($likedBy)) {
+            $this->likedBy[] = $likedBy;
+        }
 
         return $this;
     }
 
+    public function removeLikedBy(User $likedBy): self
+    {
+        if ($this->likedBy->contains($likedBy)) {
+            $this->likedBy->removeElement($likedBy);
+        }
+
+        return $this;
+    }
+
+    public function getUploadedBy(): ?User
+    {
+        return $this->uploadedBy;
+    }
+
+    public function setUploadedBy(?User $uploadedBy): self
+    {
+        $this->uploadedBy = $uploadedBy;
+
+        return $this;
+    }
 
 }

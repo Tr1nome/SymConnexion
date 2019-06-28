@@ -38,6 +38,11 @@ class Formation
      */
     private $user;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Day", cascade={"persist", "remove"})
+     */
+    private $day;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -117,6 +122,22 @@ class Formation
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function __toString(){
+        return $this->getUser();
+    }
+
+    public function getDay(): ?Day
+    {
+        return $this->day;
+    }
+
+    public function setDay(?Day $day): self
+    {
+        $this->day = $day;
 
         return $this;
     }

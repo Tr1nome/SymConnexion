@@ -36,11 +36,23 @@ class User extends BaseUser
      */
     private $image;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Image", mappedBy="likedBy")
+     */
+    private $images;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="uploadedBy")
+     */
+    private $photos;
+
     public function __construct()
     {
         parent::__construct();
         $this->formations = new ArrayCollection();
         $this->events = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->photos = new ArrayCollection();
     }
 
     /**
@@ -107,6 +119,65 @@ class User extends BaseUser
     public function setImage(?Image $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->addLikedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+            $image->removeLikedBy($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Image[]
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    public function addPhoto(Image $photo): self
+    {
+        if (!$this->photos->contains($photo)) {
+            $this->photos[] = $photo;
+            $photo->setUploadedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhoto(Image $photo): self
+    {
+        if ($this->photos->contains($photo)) {
+            $this->photos->removeElement($photo);
+            // set the owning side to null (unless already changed)
+            if ($photo->getUploadedBy() === $this) {
+                $photo->setUploadedBy(null);
+            }
+        }
 
         return $this;
     }

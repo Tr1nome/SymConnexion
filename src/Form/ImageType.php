@@ -15,17 +15,19 @@ class ImageType extends AbstractType
     {
         $builder
             ->add('file',FileType::class,array('label' => 'image','required' => false))
+            ->add('alternative')
+            ->add('title')
+            ->add('description')
+            ->add('uploadedBy')
+            ->add('likedBy', null,array
+            ('expanded'=>true,'multiple'=>true))
             ->add('allowed', ChoiceType::class, [
                 'label'=> 'Autoriser ?',
                 'choices'  => [
                     'Oui' => true,
                     'Non' => false,
                 ],
-            ])
-            ->add('alternative')
-            ->add('title')
-            ->add('description')
-            ->add('created_at')
+            ])  
         ;
     }
 

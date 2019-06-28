@@ -13,7 +13,7 @@ use FOS\UserBundle\Doctrine\UserManager;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
- * @Route("/users")
+ * @Route("/users", host="connexion.fr")
  */
 class UserController extends AbstractController{
 
@@ -49,6 +49,46 @@ class UserController extends AbstractController{
         
         return $this->render('user_list/index.html.twig', [
             'users' => $user,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, User $formation): Response
+    {
+        $form = $this->createForm(UserType::class, $formation);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $image = $formation->getImage();
+            $file = $form->get('image')->get('file')->getData();
+            if ($file){
+                $fileName = $this->generateUniqueFileName().'.'. $file->guessExtension();
+                // Move the file to the directory where brochures are stored
+                try {
+                    $file->move(
+                        $this->getParameter('images_directory'), $fileName
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $this->removeFile($image->getPath());
+                $image->setPath($this->getParameter('images_directory').'/'.$fileName) ;
+                $image->setImgpath($this->getParameter('images_path').'/'.$fileName);
+                $entityManager->persist($image);
+            }
+            if (empty($image->getId()) && !$file ){
+                $formation->setImage(null);
+            }
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('user_list', [
+                'id' => $formation->getId(),
+            ]);
+        }
+        return $this->render('user/edit.html.twig', [
+            'user' => $formation,
+            'form' => $form->createView(),
         ]);
     }
 }

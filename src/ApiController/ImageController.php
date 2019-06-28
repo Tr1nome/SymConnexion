@@ -3,6 +3,7 @@
 namespace App\ApiController;
 
 use App\Entity\Image;
+use App\Entity\User;
 use App\Form\ImageType;
 use App\Event\ImageCreatedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -16,6 +17,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use App\ApiController\AuthController;
+use FOS\UserBundle\Model\UserManagerInterface;
+use FOS\UserBundle\Doctrine\UserManager;
 
 /**
  * @Route("/image", host="api.connexion.fr")
@@ -84,8 +88,9 @@ class ImageController extends AbstractFOSRestController
             $image->setPath($this->getParameter('images_directory').'/'.$fileName);
             $image->setImgPath($this->getParameter('images_path').'/'.$fileName);
             $image->setAllowed(false);
-            //$image->setTitle($request->get('title'));
-            //$image->setDescription($request->get('description'));
+            $image->setTitle($request->get('title'));
+            $image->setDescription($request->get('description'));
+            $image->setUploadedBy($this->getUser());
             
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($image);
@@ -149,6 +154,40 @@ class ImageController extends AbstractFOSRestController
     }
 
     /**
+     * @Rest\Patch(
+     * path = "/{id}/like",
+     * name="imagelike_api",
+     * )
+     * @Rest\View()
+     */
+    public function like(Request $request, Image $image)
+    {
+        $image->addLikedBy($this->getUser());
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($image);
+        $entityManager->flush();
+        $image = $this->normalize($image);
+        return View::create($image, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/dislike",
+     * name="imagedislike_api",
+     * )
+     * @Rest\View()
+     */
+    public function dislike(Request $request, Image $image)
+    {
+        $image->removeLikedBy($this->getUser());
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($image);
+        $entityManager->flush();
+        $image = $this->normalize($image);
+        return View::create($image, Response::HTTP_CREATED);
+    }
+
+    /**
      * @Rest\Delete(
      *   path="/{id}",
      *   name="imagedelete_api",
@@ -180,8 +219,10 @@ class ImageController extends AbstractFOSRestController
                 'title',
                 'description',
                 'alternative',
-                'allowed'
-                
+                'allowed',
+                'createdAt',
+                'likedBy'=>['username'],
+                'uploadedBy'=>['username']
             ]]);
         return $object;
     }

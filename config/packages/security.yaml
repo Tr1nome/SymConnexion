@@ -38,6 +38,7 @@ security:
 
         main:
             host: connexion\.fr
+            access_denied_handler: App\Security\AccessDeniedHandler
             pattern: ^/
             form_login:
                 provider: fos_userbundle
@@ -47,13 +48,15 @@ security:
 
 
     access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY , host: connexion\.fr }
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY , host: connexion\.fr }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY, host: connexion\.fr }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY , host: connexion\.fr}
         - { path: ^/admin, role: ROLE_ADMIN, host: connexion\.fr }
         - { path: ^/formation, role: ROLE_USER, host: api\.connexion\.fr }
-        - { path: ^/formation, role: ROLE_USER, host: connexion\.fr }
-        - { path: ^/event, role: ROLE_USER, host: connexion\.fr }
-        - { path: ^/users, role: ROLE_USER, host: connexion\.fr }
-        - { path: ^/actu, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr }
+        - { path: ^/formation, role: ROLE_ADMIN, host: connexion\.fr }
+        - { path: ^/event, role: ROLE_ADMIN, host: connexion\.fr }
+        - { path: ^/users, role: ROLE_ADMIN, host: connexion\.fr }
+        - { path: ^/admin, role: ROLE_ADMIN, host: connexion\.fr }
+        #- { path: ^/actu, role: ROLE_ADMIN, host: connexion\.fr }
+        #- { path: ^/actu, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr }
         - { path: ^/product, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr }

@@ -35,6 +35,7 @@
         <th scope="col">Autorisation</th>
         <th scope="col">Titre/Description</th>
         <th scope="col">Crée le </th>
+        <th scope="col">Modifiée le</th>
         <th scope="col">Actions</th>
         <th scope="col">Montrer</th>
         <th scope="col">Edition</th>
@@ -48,7 +49,8 @@
             <td>type de l'image</td>
             <td>{% if image.allowed %} <p style="color:green;">Oui</p> {% else %} <p style="color:red;">Non</p>{% endif %}</td>
             <td> {{image.alternative}} </td>
-            <td>{{ image.createdAt | date }}</td>
+            <td>{{ image.createdAt | date("d F Y")}} à {{ image.createdAt | date("H:i")}}</td>
+            <td>{{ image.updatedAt | date("d F Y")}} à {{ image.updatedAt | date("H:i")}}</td>
             <td><a class="btn btn-success" href="{{ path('image_allow', {'id': image.id}) }}">allow</a></td>
             <td>
                 <a class="btn btn-warning"href="{{ path('image_show', {'id': image.id}) }}">show</a>
