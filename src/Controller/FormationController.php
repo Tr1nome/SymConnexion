@@ -14,7 +14,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Egyg33k\CsvBundle;
 use Egyg33k\CsvBundle\Services\Writer;
 /**
- * @Route("/formation", host="connexion.fr")
+ * @Route("/formation", host="admin.fenrir-studio.fr")
  */
 class FormationController extends AbstractController
 {
@@ -65,10 +65,10 @@ class FormationController extends AbstractController
                 $image->setImgPath($this->getParameter('images_path') . '/' . $fileName);
                 $entityManager->persist($image);
                 $formation->setImage($image);
+                
             }
             else{
                 $formation->setImage(null);
-                $image->setTitle(null);
             }
             $entityManager->persist($formation);
             $entityManager->flush();

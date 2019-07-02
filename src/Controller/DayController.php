@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/day")
+ * @Route("/day", host="admin.fenrir-studio.fr")
  */
 class DayController extends AbstractController
 {

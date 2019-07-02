@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Serializer;
 use App\Repository\UserRepository;
 
 /**
- * @Route("/user", host="api.connexion.fr")
+ * @Route("/user", host="api.fenrir-studio.fr")
  */
 class UserController extends AbstractFOSRestController
 {

@@ -17,7 +17,7 @@ security:
             security: false
 
         login:
-            host: api\.connexion\.fr
+            host: api\.fenrir-studio\.fr
             pattern: ^/login
             stateless: true
             anonymous: true
@@ -25,19 +25,23 @@ security:
                 check_path: /login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-
-        api:
-            host: api\.connexion\.fr
-            pattern: ^/
+        auth_register:
+            host: api\.fenrir-studio\.fr
+            pattern: ^/auth/register
             stateless: true
             anonymous: true
+            provider: fos_userbundle
+        api:
+            host: api\.fenrir-studio\.fr
+            pattern: ^/
+            stateless: true
+            anonymous: false
             provider: fos_userbundle
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
-
         main:
-            host: connexion\.fr
+            host: admin\.fenrir-studio\.fr
             access_denied_handler: App\Security\AccessDeniedHandler
             pattern: ^/
             form_login:
@@ -48,15 +52,17 @@ security:
 
 
     access_control:
-        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY , host: connexion\.fr }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY, host: connexion\.fr }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY , host: connexion\.fr}
-        - { path: ^/admin, role: ROLE_ADMIN, host: connexion\.fr }
-        - { path: ^/formation, role: ROLE_USER, host: api\.connexion\.fr }
-        - { path: ^/formation, role: ROLE_ADMIN, host: connexion\.fr }
-        - { path: ^/event, role: ROLE_ADMIN, host: connexion\.fr }
-        - { path: ^/users, role: ROLE_ADMIN, host: connexion\.fr }
-        - { path: ^/admin, role: ROLE_ADMIN, host: connexion\.fr }
-        #- { path: ^/actu, role: ROLE_ADMIN, host: connexion\.fr }
-        #- { path: ^/actu, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr }
-        - { path: ^/product, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr }
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY , host: admin\.fenrir-studio\.fr }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY, host: admin\.fenrir-studio\.fr }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY , host: admin\.fenrir-studio\.fr}
+        #- { path: ^/admin, role: ROLE_ADMIN, host: connexion\.fr }
+        - { path: ^/formation, role: ROLE_USER, host: api\.fenrir-studio\.fr }
+        - { path: ^/formation, role: ROLE_ADMIN, host: admin\.fenrir-studio\.fr }
+        - { path: ^/event, role: ROLE_USER, host: admin\.fenrir-studio\.fr }
+        - { path: ^/users, role: ROLE_ADMIN, host: admin\.fenrir-studio\.fr }
+        - { path: ^/admin, role: ROLE_ADMIN, host: admin\.fenrir-studio\.fr }
+        - { path: ^/event, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.fenrir-studio\.fr }
+        #- { path: ^/auth, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr}
+        - { path: ^/actu, role: IS_AUTHENTICATED_ANONYMOUSLY, host: admin\.fenrir-studio\.fr }
+        - { path: ^/actu, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.fenrir-studio\.fr }
+        - { path: ^/product, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.fenrir-studio\.fr }

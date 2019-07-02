@@ -22,7 +22,7 @@ use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Doctrine\UserManager;
 
 /**
- * @Route("/image", host="api.connexion.fr")
+ * @Route("/image", host="api.fenrir-studio.fr")
  */
 class ImageController extends AbstractFOSRestController
 {
@@ -43,6 +43,20 @@ class ImageController extends AbstractFOSRestController
         $image = $imageRepository->findAll();
         $images = $this->normalize($image);
         return View::create($images, Response::HTTP_OK);
+    }
+
+    /**
+     * @Rest\Get(
+     * path = "/{id}/likes",
+     * name="image_likes_num_api",
+     * )
+     * @Rest\View()
+     */
+    public function getLikes(Image $image): View
+    {
+        $likes = $image->getLikedBy();
+        $likes = $this->serialize($likes);
+        return View::create($likes, Response::HTTP_OK);
     }
 
     /**
@@ -92,11 +106,13 @@ class ImageController extends AbstractFOSRestController
             $image->setDescription($request->get('description'));
             $image->setUploadedBy($this->getUser());
             
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($image);
             $entityManager->flush();
             $imageEvent = new ImageCreatedEvent($image);
             $this->dispatcher->dispatch('image.created', $imageEvent);
+            $image = $this->deserialize($image);
             
         }
 
@@ -196,13 +212,22 @@ class ImageController extends AbstractFOSRestController
      */
     public function delete(Image $image): View
     {
+        $entityManager = $this->getDoctrine()->getManager();
         if ($image) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $this->removeFile($image->getPath());
             $entityManager->remove($image);
             $entityManager->flush();
         }
 
         return View::create([], Response::HTTP_NO_CONTENT);
+    }
+
+    private function removeFile($path)
+    {
+        if(file_exists($path))
+        {
+            unlink($path);
+        }
     }
 
     private function normalize($object)
@@ -223,6 +248,41 @@ class ImageController extends AbstractFOSRestController
                 'createdAt',
                 'likedBy'=>['username'],
                 'uploadedBy'=>['username']
+            ]]);
+        return $object;
+    }
+
+    private function deserialize($object)
+    {
+        /* Serializer, normalizer exemple */
+
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $object = $serializer->normalize($object, null,
+            ['attributes' => [
+                'id',
+                'file',
+                'path',
+                'imgPath',
+                'title',
+                'description',
+                'alternative',
+                'allowed',
+                'createdAt',
+                'uploadedBy'=>['username']
+            ]]);
+        return $object;
+    }
+
+
+    private function serialize($object)
+    {
+        /* Serializer, normalizer exemple */
+
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $object = $serializer->normalize($object, null,
+            ['attributes' => [
+                'id',
+                'username'
             ]]);
         return $object;
     }

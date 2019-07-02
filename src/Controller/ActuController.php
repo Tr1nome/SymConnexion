@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/actu", host="connexion.fr")
+ * @Route("/actu", host="admin.fenrir-studio.fr")
  */
 class ActuController extends AbstractController
 {

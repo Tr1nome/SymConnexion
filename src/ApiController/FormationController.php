@@ -20,7 +20,7 @@ use App\ApiController\AuthController;
 use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Doctrine\UserManager;
 /**
- * @Route("/formation", host="api.connexion.fr")
+ * @Route("/formation", host="api.fenrir-studio.fr")
  */
 class FormationController extends AbstractFOSRestController
 {
@@ -174,7 +174,7 @@ class FormationController extends AbstractFOSRestController
                 'name',
                 'description',
                 'user' => ['id','username','image'=>['id','file','path','imgPath']],
-                'image'=> ['id','file','path','imgPath'],
+                'image'=> ['id','file','path','imgPath','likedBy'=>['username']],
                 'day',
                 
             ]]);

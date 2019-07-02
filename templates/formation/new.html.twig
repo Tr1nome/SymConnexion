@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css">
+{% endblock %}
+
 {% block title %}New Formation{% endblock %}
 
 {% block body %}
@@ -8,4 +13,15 @@
     {{ include('formation/_form.html.twig') }}
 
     <a href="{{ path('formation_index') }}">back to list</a>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+    <script src="{{ asset("js/bootstrap-datepicker.fr.min.js") }}"></script>
+    <script>
+        $(document).ready(function() {
+            $.fn.datepicker.defaults.language = 'fr';
+            $('.js-datepicker').datepicker();
+        });
+    </script>
 {% endblock %}

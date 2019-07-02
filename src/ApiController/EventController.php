@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * @Route("/event", host="api.connexion.fr")
+ * @Route("/event", host="api.fenrir-studio.fr")
  */
 class EventController extends AbstractFOSRestController
 {

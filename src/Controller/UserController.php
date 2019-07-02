@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Image;
+use App\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,10 +14,16 @@ use FOS\UserBundle\Doctrine\UserManager;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
- * @Route("/users", host="connexion.fr")
+ * @Route("/users", host="admin.fenrir-studio.fr")
  */
 class UserController extends AbstractController{
 
+    private $userManager;
+
+    public function __construct(UserManagerInterface $userManager)
+    {
+        $this->userManager = $userManager;
+    }
     /**
      * @Route("/", name="user_index", methods={"GET"})
      */
@@ -51,44 +58,50 @@ class UserController extends AbstractController{
             'users' => $user,
         ]);
     }
-
     /**
-     * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
+     * @Route("/promote/{id}", name="user_promote")
      */
-    public function edit(Request $request, User $formation): Response
-    {
-        $form = $this->createForm(UserType::class, $formation);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $image = $formation->getImage();
-            $file = $form->get('image')->get('file')->getData();
-            if ($file){
-                $fileName = $this->generateUniqueFileName().'.'. $file->guessExtension();
-                // Move the file to the directory where brochures are stored
-                try {
-                    $file->move(
-                        $this->getParameter('images_directory'), $fileName
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-                $this->removeFile($image->getPath());
-                $image->setPath($this->getParameter('images_directory').'/'.$fileName) ;
-                $image->setImgpath($this->getParameter('images_path').'/'.$fileName);
-                $entityManager->persist($image);
-            }
-            if (empty($image->getId()) && !$file ){
-                $formation->setImage(null);
-            }
-            $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('user_list', [
-                'id' => $formation->getId(),
-            ]);
-        }
-        return $this->render('user/edit.html.twig', [
-            'user' => $formation,
-            'form' => $form->createView(),
+    public function promoteUserAction(UserManagerInterface $userManager, Request $request): Response{
+        $user = $userManager->findUserBy(array('id'=> $request->get('id')));    
+        $user->addRole('ROLE_ADMIN');
+        $userManager->updateUser($user);
+        return $this->render('user_list/index.html.twig', [
+            'users' => $userManager->findUsers(),
         ]);
     }
+
+    /**
+     * @Route("/demote/{id}", name="user_demote")
+     */
+    public function demoteUserAction(UserManagerInterface $userManager, Request $request): Response{
+        $user = $userManager->findUserBy(array('id'=> $request->get('id')));    
+        $user->removeRole('ROLE_ADMIN');
+        $userManager->updateUser($user);
+        return $this->render('user_list/index.html.twig', [
+            'users' => $userManager->findUsers(),
+        ]);
+    }
+    /**
+     * @Route("/edit/{id}", name="user_edit", methods={"GET"})
+     */
+    public function editAction(Request $request, UserManagerInterface $userManager)
+    {
+        $user = $userManager->findUserBy(['id']);
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('user_list/index.html.twig');
+        }
+
+        return $this->render('user/edit_user.html.twig', array(
+            'user' => $user,
+            'edit_form' => $editForm->createView(),
+
+        ));
+}
 }

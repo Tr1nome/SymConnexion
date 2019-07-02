@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
- * @Route("/image")
+ * @Route("/image", host="admin.fenrir-studio.fr")
  */
 class ImageController extends AbstractController
 {

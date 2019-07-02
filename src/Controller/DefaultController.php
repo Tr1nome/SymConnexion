@@ -5,7 +5,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/", name="accueilClass_", host="connexion.fr")
+ * @Route("/", name="accueilClass_", host="admin.fenrir-studio.fr")
  */
 class DefaultController extends AbstractController
 {

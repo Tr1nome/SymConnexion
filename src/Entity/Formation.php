@@ -43,6 +43,11 @@ class Formation
      */
     private $day;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $hour;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -138,6 +143,18 @@ class Formation
     public function setDay(?Day $day): self
     {
         $this->day = $day;
+
+        return $this;
+    }
+
+    public function getHour(): ?\DateTimeInterface
+    {
+        return $this->hour;
+    }
+
+    public function setHour(?\DateTimeInterface $hour): self
+    {
+        $this->hour = $hour;
 
         return $this;
     }

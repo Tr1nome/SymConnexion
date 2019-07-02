@@ -17,7 +17,7 @@ use App\Repository\UserRepository;
 
 
 /**
- * @Rest\Route("/auth", host="api.connexion.fr")
+ * @Rest\Route("/auth", host="api.fenrir-studio.fr")
  */
 
 class AuthController extends AbstractFOSRestController
@@ -68,7 +68,7 @@ class AuthController extends AbstractFOSRestController
     public function profile()
     {
         $user = $this->getUser();
-        //$user = $this->normalize($user);
+        $user = $this->normalize($user);
         return View::create($user, Response::HTTP_OK);
         
     }
@@ -99,12 +99,15 @@ class AuthController extends AbstractFOSRestController
         /* Serializer, normalizer exemple */
 
         $serializer = new Serializer([new ObjectNormalizer()]);
-        $object = $serializer->normalize($object, null,
-            ['attributes' => [
+        $object = $serializer->normalize($object, null, ['attributes' => [
                 'id',
                 'email',
                 'username',
-                'roles'
+                'roles',
+                'image'=>['id','file','path','imgPath','alternative'],
+                'formations'=>['name','description'],
+                'events'=>['name','description'],
+                'photos'=>['id','path','file','imgPath','alternative','title','description']
             ]]);
         return $object;
     }

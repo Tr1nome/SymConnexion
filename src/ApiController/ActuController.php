@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/actu", host="api.connexion.fr")
+ * @Route("/actu", host="api.fenrir-studio.fr")
  */
 class ActuController extends AbstractFOSRestController
 {

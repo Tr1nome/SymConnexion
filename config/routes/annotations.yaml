@@ -1,20 +1,20 @@
-#to_fenrir:
-#    path: /
-#    host: 'connexion.fr'
-#    defaults:
-#        url: 'http://localhost:4200/actu'
+to_fenrir:
+    path: /
+    host: 'connexion.fr'
+    defaults:
+        url: 'http://www.fenriz-studio.fr'
 
 controllers:
-    host: 'connexion.fr'
+    host: 'admin.fenrir-studio.fr'
     resource: ../../src/Controller/
     type: annotation
 
 api_auth_login:
-    host: 'api.connexion.fr'
+    host: 'api.fenrir-studio.fr'
     path: /login_check
     methods: [POST]
 
 api_controllers:
-    host: 'api.connexion.fr'
+    host: 'api.fenrir-studio.fr'
     resource: ../../src/ApiController/
     type: annotation
