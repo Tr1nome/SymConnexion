@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190626195444 extends AbstractMigration
+final class Version20190715070852 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,9 +22,7 @@ final class Version20190626195444 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE image_user (image_id INT NOT NULL, user_id INT NOT NULL, INDEX IDX_7FA93CD73DA5256D (image_id), INDEX IDX_7FA93CD7A76ED395 (user_id), PRIMARY KEY(image_id, user_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE image_user ADD CONSTRAINT FK_7FA93CD73DA5256D FOREIGN KEY (image_id) REFERENCES image (id) ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE image_user ADD CONSTRAINT FK_7FA93CD7A76ED395 FOREIGN KEY (user_id) REFERENCES fos_user (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE fos_user ADD lname VARCHAR(255) DEFAULT NULL, ADD fname VARCHAR(255) DEFAULT NULL, ADD adherent TINYINT(1) NOT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -32,6 +30,6 @@ final class Version20190626195444 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE image_user');
+        $this->addSql('ALTER TABLE fos_user DROP lname, DROP fname, DROP adherent');
     }
 }

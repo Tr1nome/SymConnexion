@@ -12,5 +12,5 @@ fos_user:
         email:
             template: FOSUserBundle:Resetting:email.txt.twig
     from_email:
-        address: "contact@connexion.fr"
-        sender_name:  "contact@connexion.fr"
+        address: "contact@fenrir-studio.fr"
+        sender_name:  "contact@fenrir-studio.fr"

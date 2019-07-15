@@ -81,6 +81,31 @@ class UserController extends AbstractController{
             'users' => $userManager->findUsers(),
         ]);
     }
+
+    /**
+     * @Route("/former/{id}", name="user_former")
+     */
+    public function formerUserAction(UserManagerInterface $userManager, Request $request): Response{
+        $user = $userManager->findUserBy(array('id'=> $request->get('id')));    
+        $user->setFormateur(true);
+        $userManager->updateUser($user);
+        return $this->render('user_list/index.html.twig', [
+            'users' => $userManager->findUsers(),
+        ]);
+    }
+
+    /**
+     * @Route("/unformer/{id}", name="user_unformer")
+     */
+    public function unformerUserAction(UserManagerInterface $userManager, Request $request): Response{
+        $user = $userManager->findUserBy(array('id'=> $request->get('id')));    
+        $user->setFormateur(false);
+        $userManager->updateUser($user);
+        return $this->render('user_list/index.html.twig', [
+            'users' => $userManager->findUsers(),
+        ]);
+    }
+
     /**
      * @Route("/edit/{id}", name="user_edit", methods={"GET"})
      */

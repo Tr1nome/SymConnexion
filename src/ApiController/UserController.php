@@ -119,8 +119,9 @@ class UserController extends AbstractFOSRestController
                 'id',
                 'email',
                 'username',
+                'formateur',
                 'roles',
-                'image'=>['id','file','path','imgPath']
+                'profilePicture'=>['id','file','path','imgPath']
             ]]);
         return $object;
     }

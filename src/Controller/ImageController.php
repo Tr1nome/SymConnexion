@@ -23,8 +23,6 @@ class ImageController extends AbstractController
     {
         $this->dispatcher = $dispatcher;
     }
-
-
     /**
      * @Route("/", name="image_index", methods={"GET"})
      */

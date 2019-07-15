@@ -4,6 +4,7 @@ namespace App\ApiController;
 
 use App\Entity\Image;
 use App\Entity\User;
+use App\Entity\MediaType;
 use App\Form\ImageType;
 use App\Event\ImageCreatedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -41,6 +42,7 @@ class ImageController extends AbstractFOSRestController
     public function index(ImageRepository $imageRepository): View
     {
         $image = $imageRepository->findAll();
+
         $images = $this->normalize($image);
         return View::create($images, Response::HTTP_OK);
     }
@@ -118,6 +120,54 @@ class ImageController extends AbstractFOSRestController
 
         return View::create($image, Response::HTTP_CREATED);
     }
+
+    /**
+     * @Rest\Post(
+     * path = "/newProfile",
+     * name="imagenewProfile_api",
+     * )
+     * @Rest\View()
+     */
+    public function uploadProfilePicture(Request $request): View
+    {
+
+        $image = new Image();
+        $type = new MediaType();
+        $file = $request->files->get('file');
+        
+        if ($file){
+            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+
+            // Move the file to the directory where brochures are stored
+            try {
+                $file->move(
+                    $this->getParameter('images_directory'),
+                    $fileName
+                );
+            } catch (FileException $e) {
+                // ... handle exception if something happens during file upload
+            }
+            // updates the 'brochure' property to store the PDF file name
+            // instead of its contents
+            $image->setPath($this->getParameter('images_directory').'/'.$fileName);
+            $image->setImgPath($this->getParameter('images_path').'/'.$fileName);
+            $image->setAllowed(true);
+            $image->setTitle($request->get('title'));
+            $image->setDescription($request->get('description'));
+            $image->setUploadedBy($this->getUser());
+            $image->setUser($this->getUser());
+            
+            
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($image);
+            $entityManager->flush();
+            $image = $this->deserialize($image);
+            
+        }
+
+        return View::create($image, Response::HTTP_CREATED);
+    }
+
 
     /**
      * @return string
@@ -245,6 +295,7 @@ class ImageController extends AbstractFOSRestController
                 'description',
                 'alternative',
                 'allowed',
+                'type'=>['name'],
                 'createdAt',
                 'likedBy'=>['username'],
                 'uploadedBy'=>['username']
@@ -267,6 +318,7 @@ class ImageController extends AbstractFOSRestController
                 'description',
                 'alternative',
                 'allowed',
+                'type',
                 'createdAt',
                 'uploadedBy'=>['username']
             ]]);

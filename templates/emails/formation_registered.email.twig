@@ -1,0 +1,11 @@
+<h2>Bonjour cher adhérent ! </h2>
+
+    <div>
+        <p>Votre inscription à la formation : {{ formation.name }} à bien été pise en compte ! </p>
+    </div>
+    <div>
+        <p>Vous pouvez vous désinscrire à tout moment ! où déclarer une absence, l'important est de prévenir dans les plus brefs délais,
+        pour déclarer une absence il vous suffit de vous rendre dans l'onglet formation et de cliquer sur <b>"Déclarer une abscence"</b> comme ci dessous </p>
+        <img src="{{ asset('/img/absthumbnail.png')}}" />
+    </div>
+    <div>Rappel : La formation a lieu le {{ formation.hour | date("d/m/Y") }} à {{ formation.time | date("G\\hi") }} ne soyez pas en <b>retard</b> !</div>

@@ -24,7 +24,7 @@ class Formation
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=10000)
      */
     private $description;
 
@@ -39,14 +39,14 @@ class Formation
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Day", cascade={"persist", "remove"})
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $day;
+    private $hour;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $hour;
+    private $time;
 
     public function __construct()
     {
@@ -135,18 +135,6 @@ class Formation
         return $this->getUser();
     }
 
-    public function getDay(): ?Day
-    {
-        return $this->day;
-    }
-
-    public function setDay(?Day $day): self
-    {
-        $this->day = $day;
-
-        return $this;
-    }
-
     public function getHour(): ?\DateTimeInterface
     {
         return $this->hour;
@@ -155,6 +143,18 @@ class Formation
     public function setHour(?\DateTimeInterface $hour): self
     {
         $this->hour = $hour;
+
+        return $this;
+    }
+
+    public function getTime(): ?\DateTimeInterface
+    {
+        return $this->time;
+    }
+
+    public function setTime(?\DateTimeInterface $time): self
+    {
+        $this->time = $time;
 
         return $this;
     }

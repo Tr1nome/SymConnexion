@@ -2,16 +2,17 @@
 
 namespace App\EventListener;
 
+use App\Entity\Formation;
 use App\Entity\User;
-use App\Event\UserCreatedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use App\Event\FormationRegisteredEvent;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Swift_Mailer;
 use Swift_Message;
 use Twig\Environment;
 
-class UserCreatedListener implements EventSubscriberInterface
+class FormationRegisterListener implements EventSubscriberInterface
 {
     use LoggerAwareTrait;
 
@@ -36,39 +37,41 @@ class UserCreatedListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            "user.registered" => [
-                ["onUserRegistered", 0],
+            "formation.registered" => [
+                ["onFormationRegistered", 0],
                 ["writeLog", -10],
             ]
         ];
     }
 
-    public function onUserRegistered(UserCreatedEvent $event):void
+    public function onFormationRegistered(FormationRegisteredEvent $event):void
     {
-        $user = $event->getUser();
-        if($user instanceof User)
+        $formation = $event->getFormation();
+    
+        if($formation instanceof Formation)
         {
-            $this->sendMail($user);
+            $this->sendMail($formation);
             $event->stopPropagation();
-            $this->writeLog( $user);
+            $this->writeLog($formation);
         }
     }
 
-    public function writeLog( User $user): void
+    public function writeLog(Formation $formation): void
     {
-        $this->logger->info(sprintf("Un nouveau client s'est inscrit sur le site ! Bienvenue à %s" , $user->getUsername()));
+        //$this->logger->info(sprintf('New Image : %s , created by %s , and send mail'));
     }
 
-    private function sendMail( User $user) : void
+    private function sendMail(Formation $formation) : void
     {
+        
         $sendTo  = 'leosouly@gmail.com';
-        $message = (new Swift_Message('Nouvel Utilisateur !'))
+        $message = (new Swift_Message('[FenrirStudio.fr] : Inscription à une formation'))
             ->setFrom('no-reply@fyps.fr')
             ->setTo($sendTo)
             ->setBody(
                 $this->templating->render(
-                    'emails/user_creation.email.twig',
-                    ['user' => $user]
+                    'emails/formation_registered.email.twig',
+                    ['formation' => $formation]
                 ),
                 'text/html'
             );

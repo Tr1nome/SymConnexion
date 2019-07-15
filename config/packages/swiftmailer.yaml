@@ -4,5 +4,5 @@ swiftmailer:
     encryption: ssl
     host: smtp.gmail.com
     username: leosouly@gmail.com
-    password: Versimilitude33
+    password: Persephonelayer33
     spool: { type: 'memory' }

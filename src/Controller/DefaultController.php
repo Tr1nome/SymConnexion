@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/", name="accueilClass_", host="admin.fenrir-studio.fr")
@@ -20,18 +21,6 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/admin", name="indexAdmin")
-     *
-     */
-    public function indexAdmin()
-    {
-        //$this->deny
-        $random = random_int(0, 1200);
-        return $this->render('default/index.html.twig');
-
-    }
-
-    /**
      * @Route("/redirectionTo", name="redirectTo")
      */
     public function redirection()
@@ -42,7 +31,7 @@ class DefaultController extends AbstractController
             return $this->redirectToRoute('fos_user_profile_show');
         }
 
-        return $this->redirectToRoute('to_fenrir');
+        return $this->redirectToRoute('to_ng');
     }
 
 }

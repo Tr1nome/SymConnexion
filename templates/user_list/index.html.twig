@@ -21,7 +21,8 @@
                 <th>Role</th>
                 <th>Photo de profil</th>
                 <th>Inscrit ?</th>
-                <th>Actions admin</th>
+                <th>Passer administrateur ?</th>
+                <th>Passer formateur ?</th>
             </tr>
         </thead>
         <tbody>
@@ -38,21 +39,28 @@
                  <img title="Cet utilisateur a un statut d'utilisateur" style="width:70px;height:70px;" src="{{ asset('img/silver png.png') }}"/>
                  {% endif %}
                  </td>
-                <td><img style="width:50px;height:50px;" src="{{ asset(user.image.imgPath)}}"/> </td>
+                <td>{% if user.profilePicture %} <img style="width:50px;height:50px;" src="{{ asset(user.profilePicture.imgPath)}}"/> {% endif %} </td>
                 <td>{% if user.enabled %}<p style="color:green">Oui</p>{% else %}
                 <a class="btn-success" href="{{ path('user_confirm')}}">Confirmer l'utilisateur</a>{% endif %}</td>
                 <td>
                 {% if user.hasRole('ROLE_ADMIN') %}
                 {% if user.username == "Admin" %}
-                <button class="btn btn-danger" disabled>Rétrograder</button>
+                <button class="btn btn-danger" disabled>Aucune action</button>
                 {% else %}
-                <a class="btn btn-danger"  href="{{ path('user_demote',{'id': user.id})}}">Rétrograder</a>
+                <a class="btn btn-danger"  href="{{ path('user_demote',{'id': user.id})}}">Non</a>
                 {% endif %}
                 {% endif %}
                 {% if user.hasRole('ROLE_USER') %}
                 {% if user.username != "Admin" %}
-                <a class="btn btn-success" disabled  href="{{ path('user_promote',{'id': user.id})}}">Promouvoir</a>
+                <a class="btn btn-success" disabled  href="{{ path('user_promote',{'id': user.id})}}">Oui</a>
                 {% endif %}
+                {% endif %}
+                </td>
+                <td>
+                {% if user.formateur %}
+                <a href="{{ path('user_unformer', {'id': user.id } ) }}" class="btn btn-danger">Non</a>
+                {% else %}
+                <a href="{{ path('user_former', {'id': user.id } ) }}" class="btn btn-success">Oui</a>
                 {% endif %}
                 </td>
             </tr>

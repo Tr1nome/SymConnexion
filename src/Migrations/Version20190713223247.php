@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190625132918 extends AbstractMigration
+final class Version20190713223247 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,9 +22,8 @@ final class Version20190625132918 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE formation ADD day_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE formation ADD CONSTRAINT FK_404021BF9C24126 FOREIGN KEY (day_id) REFERENCES day (id)');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_404021BF9C24126 ON formation (day_id)');
+        $this->addSql('ALTER TABLE event ADD hour DATETIME DEFAULT NULL, ADD time DATETIME DEFAULT NULL, CHANGE description description VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE formation CHANGE description description VARCHAR(255) NOT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -32,8 +31,7 @@ final class Version20190625132918 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE formation DROP FOREIGN KEY FK_404021BF9C24126');
-        $this->addSql('DROP INDEX UNIQ_404021BF9C24126 ON formation');
-        $this->addSql('ALTER TABLE formation DROP day_id');
+        $this->addSql('ALTER TABLE event DROP hour, DROP time, CHANGE description description VARCHAR(10000) NOT NULL COLLATE utf8mb4_unicode_ci');
+        $this->addSql('ALTER TABLE formation CHANGE description description VARCHAR(2000) NOT NULL COLLATE utf8mb4_unicode_ci');
     }
 }

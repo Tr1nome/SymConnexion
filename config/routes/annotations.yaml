@@ -1,6 +1,6 @@
-to_fenrir:
+to_ng:
     path: /
-    host: 'connexion.fr'
+    host: 'www.fenriz-studio.fr'
     defaults:
         url: 'http://www.fenriz-studio.fr'
 

@@ -46,7 +46,7 @@ class Image
     private $allowed;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $title;
 
@@ -76,6 +76,16 @@ class Image
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="photos")
      */
     private $uploadedBy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\MediaType", inversedBy="images")
+     */
+    private $type;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\User", mappedBy="profilePicture", cascade={"persist", "remove"})
+     */
+    private $user;
 
     public function __construct()
     {
@@ -221,6 +231,36 @@ class Image
     public function setUploadedBy(?User $uploadedBy): self
     {
         $this->uploadedBy = $uploadedBy;
+
+        return $this;
+    }
+
+    public function getType(): ?MediaType
+    {
+        return $this->type;
+    }
+
+    public function setType(?MediaType $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newProfilePicture = $user === null ? null : $this;
+        if ($newProfilePicture !== $user->getProfilePicture()) {
+            $user->setProfilePicture($newProfilePicture);
+        }
 
         return $this;
     }

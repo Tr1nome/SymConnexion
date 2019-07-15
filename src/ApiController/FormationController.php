@@ -9,6 +9,7 @@ use App\Form\FormationType;
 use App\Repository\FormationRepository;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use App\Event\FormationRegisteredEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,7 +71,7 @@ class FormationController extends AbstractFOSRestController
         $formation->setDescription($request->get('description'));
         $formation->setImage($request->get('image'));
         $formation->setUser($this->getUser());
-        $image->setAllowed(false);
+        $image->setAllowed(true);
         $em->persist($formation);
         $em->persist($image);
         $em->flush();
@@ -128,8 +129,8 @@ class FormationController extends AbstractFOSRestController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($formation);
         $entityManager->flush();
-        //$formationEvent = new InscriptionEvent($formation,$user);
-        //$this->dispatcher->dispatch('formation.updated', $formationEvent);
+        $formationEvent = new FormationRegisteredEvent($formation);
+        $this->dispatcher->dispatch('formation.registered', $formationEvent);
         return View::create($formations, Response::HTTP_CREATED);
     }
     /**
@@ -173,10 +174,10 @@ class FormationController extends AbstractFOSRestController
                 'id',
                 'name',
                 'description',
-                'user' => ['id','username','image'=>['id','file','path','imgPath']],
+                'user' => ['id','username','adherent','profilePicture'=>['id','file','path','imgPath']],
                 'image'=> ['id','file','path','imgPath','likedBy'=>['username']],
-                'day',
-                
+                'hour',
+                'time',
             ]]);
         return $object;
     }

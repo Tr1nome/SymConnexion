@@ -122,6 +122,41 @@ class EventController extends AbstractFOSRestController
         return View::create([], Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/register",
+     * name="event_reg_api",
+     * )
+     * @Rest\View()
+     */
+    public function register(Event $event, Request $request): View
+    {
+        $event->addUser($this->getUser());
+        $events = $this->normalize($event);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($event);
+        $entityManager->flush();
+        //$formationEvent = new InscriptionEvent($formation,$user);
+        //$this->dispatcher->dispatch('formation.updated', $formationEvent);
+        return View::create($events, Response::HTTP_CREATED);
+    }
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/leave",
+     * name="event_unreg_api",
+     * )
+     * @Rest\View()
+     */
+    public function leave(Event $event, Request $request): View
+    {
+        $event->removeUser($this->getUser());
+        $events = $this->normalize($event);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($event);
+        $entityManager->flush();
+        return View::create($events, Response::HTTP_CREATED);
+    }
+
     private function normalize($object)
     {
         /* Serializer, normalizer exemple */
@@ -132,9 +167,10 @@ class EventController extends AbstractFOSRestController
                 'id',
                 'name',
                 'description',
-                'user' => ['id','username','image'=>['id','path','imgPath','alternative']],
-                'image'=> ['id','file','path','imgPath'],
-                
+                'hour',
+                'time',
+                'place',
+                'user' => ['id','username','profilePicture'=>['id','path','imgPath']]
             ]]);
         return $object;
     }

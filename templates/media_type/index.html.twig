@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Day index{% endblock %}
+{% block title %}MediaType index{% endblock %}
 
 {% block body %}
-    <h1>Day index</h1>
+    <h1>MediaType index</h1>
 
     <table class="table">
         <thead>
@@ -14,13 +14,13 @@
             </tr>
         </thead>
         <tbody>
-        {% for day in days %}
+        {% for media_type in media_types %}
             <tr>
-                <td>{{ day.id }}</td>
-                <td>{{ day.name }}</td>
+                <td>{{ media_type.id }}</td>
+                <td>{{ media_type.name }}</td>
                 <td>
-                    <a href="{{ path('day_show', {'id': day.id}) }}">show</a>
-                    <a href="{{ path('day_edit', {'id': day.id}) }}">edit</a>
+                    <a href="{{ path('media_type_show', {'id': media_type.id}) }}">show</a>
+                    <a href="{{ path('media_type_edit', {'id': media_type.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +31,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('day_new') }}">Create new</a>
+    <a href="{{ path('media_type_new') }}">Create new</a>
 {% endblock %}

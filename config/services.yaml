@@ -41,13 +41,21 @@ services:
         tags: [serializer.normalizer]
         calls:
             - method: setCircularReferenceLimit
-              arguments: [1]
+              arguments: [0]
             - method: setCircularReferenceHandler
               arguments: ["@circular_reference_handler"]
 
     form.type.model.ListItemType:
         class : App\Form\ListItemType
         arguments: ["@doctrine.orm.entity_manager"]
+
+    FOS\UserBundle\Mailer\MailerInterface: '@fos_user.mailer.twig_swift'
+    
+    app.registration_listener:
+        class: App\EventListener\RegisterConfirmationListener
+        arguments: ["@fos_user.mailer.twig_swift", "@fos_user.util.token_generator", '@session']
+        tags:
+            - { name: kernel.event_subscriber }
 
     app.form.registration:
         class: App\Form\RegistrationType

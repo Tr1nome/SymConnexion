@@ -8,16 +8,16 @@
 <div class="container">
     <h4>Options</h4>
     <a class="btn btn-primary btn-sm" href="{{ path('image_activated') }}" role="button">Images commentées
-    <i class="fas fa-list-alt"></i>
+    
     </a>
     <a class="btn btn-primary btn-sm" href="{{ path('image_index') }}" role="button">Toutes les images
-    <i class="fas fa-list-alt"></i>
+    
     </a>
     <a class="btn btn-danger btn-sm" href="{{ path('image_pending') }}" role="button">Images en attente
-    <i class="fas fa-list-alt"></i>
+    
     </a>
     <a class="btn btn-success btn-sm" href="{{ path('image_allowed') }}" role="button">Images autorisées
-    <i class="fas fa-list-alt"></i>
+    
     </a>
     <a class="btn btn-warning btn-sm" href="{{ path('image_order_high') }}" role="button">
     <i class="fas fa-sort-up"></i>
@@ -25,6 +25,7 @@
     <a class="btn btn-warning btn-sm" href="{{ path('image_order_low') }}" role="button">
     <i class="fas fa-sort-down"></i>
     </a>
+    {{ images.count }}
     <hr>
     <table class="table">
     <thead class="thead-dark">
@@ -33,7 +34,7 @@
         <th scope="col">Preview</th>
         <th scope="col">Type</th>
         <th scope="col">Autorisation</th>
-        <th scope="col">Titre/Description</th>
+        <th scope="col">Type</th>
         <th scope="col">Crée le </th>
         <th scope="col">Modifiée le</th>
         <th scope="col">Actions</th>
@@ -48,7 +49,7 @@
             <td><img src="{{ asset(image.imgPath) }}" style="width:150px;height:auto;" class="img-thumbnail"/></td>
             <td>type de l'image</td>
             <td>{% if image.allowed %} <p style="color:green;">Oui</p> {% else %} <p style="color:red;">Non</p>{% endif %}</td>
-            <td> {{image.alternative}} </td>
+            <td> {{image.type}} </td>
             <td>{{ image.createdAt | date("d F Y")}} à {{ image.createdAt | date("H:i")}}</td>
             <td>{{ image.updatedAt | date("d F Y")}} à {{ image.updatedAt | date("H:i")}}</td>
             <td><a class="btn btn-success" href="{{ path('image_allow', {'id': image.id}) }}">allow</a></td>

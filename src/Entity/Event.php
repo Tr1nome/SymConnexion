@@ -24,7 +24,7 @@ class Event
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=10000)
      */
     private $description;
 
@@ -32,6 +32,21 @@ class Event
      * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="events")
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $hour;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $time;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $place;
 
     public function __construct()
     {
@@ -89,6 +104,42 @@ class Event
         if ($this->user->contains($user)) {
             $this->user->removeElement($user);
         }
+
+        return $this;
+    }
+
+    public function getHour(): ?\DateTimeInterface
+    {
+        return $this->hour;
+    }
+
+    public function setHour(?\DateTimeInterface $hour): self
+    {
+        $this->hour = $hour;
+
+        return $this;
+    }
+
+    public function getTime(): ?\DateTimeInterface
+    {
+        return $this->time;
+    }
+
+    public function setTime(?\DateTimeInterface $time): self
+    {
+        $this->time = $time;
+
+        return $this;
+    }
+
+    public function getPlace(): ?string
+    {
+        return $this->place;
+    }
+
+    public function setPlace(?string $place): self
+    {
+        $this->place = $place;
 
         return $this;
     }

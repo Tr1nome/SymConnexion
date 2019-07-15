@@ -17,6 +17,7 @@ class ImageType extends AbstractType
             ->add('file',FileType::class,array('label' => 'image','required' => false))
             ->add('alternative')
             ->add('title')
+            ->add('type')
             ->add('description')
             ->add('uploadedBy')
             ->add('likedBy', null,array

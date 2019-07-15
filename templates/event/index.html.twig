@@ -12,6 +12,7 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Utilisateurs participants</th>
+                <th>Horaires de l'évènement</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -20,11 +21,12 @@
             <tr>
                 <td>{{ event.id }}</td>
                 <td>{{ event.name }}</td>
-                <td>{{ event.description }}</td>
+                <td>{{ event.description | raw }}</td>
                 <td>{% for user in event.user %}
                         <div> {% if user.enabled %} {{ user }} {% endif %} </div>
                     {% endfor %}
                 </td>
+                <td>{{ event.hour | date("d F Y") }} à {{ event.time | date("G:i") }}</td>
                 <td>
                     <a href="{{ path('event_show', {'id': event.id}) }}">show</a>
                     <a href="{{ path('event_edit', {'id': event.id}) }}">edit</a>

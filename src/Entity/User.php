@@ -32,11 +32,6 @@ class User extends BaseUser
     private $events;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Image", cascade={"persist", "remove"})
-     */
-    private $image;
-
-    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Image", mappedBy="likedBy")
      */
     private $images;
@@ -45,6 +40,31 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="uploadedBy")
      */
     private $photos;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $formateur;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Image", inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $profilePicture;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    private $lname;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    private $fname;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $adherent;
 
     public function __construct()
     {
@@ -111,18 +131,6 @@ class User extends BaseUser
         return $this;
     }
 
-    public function getImage(): ?Image
-    {
-        return $this->image;
-    }
-
-    public function setImage(?Image $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Image[]
      */
@@ -178,6 +186,66 @@ class User extends BaseUser
                 $photo->setUploadedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFormateur(): ?bool
+    {
+        return $this->formateur;
+    }
+
+    public function setFormateur(bool $formateur): self
+    {
+        $this->formateur = $formateur;
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?Image
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?Image $profilePicture): self
+    {
+        $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
+    public function getLname(): ?string
+    {
+        return $this->lname;
+    }
+
+    public function setLname(?string $lname): self
+    {
+        $this->lname = $lname;
+
+        return $this;
+    }
+
+    public function getFname(): ?string
+    {
+        return $this->fname;
+    }
+
+    public function setFname(?string $fname): self
+    {
+        $this->fname = $fname;
+
+        return $this;
+    }
+
+    public function getAdherent(): ?bool
+    {
+        return $this->adherent;
+    }
+
+    public function setAdherent(bool $adherent): self
+    {
+        $this->adherent = $adherent;
 
         return $this;
     }

@@ -1,18 +1,20 @@
 {% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
 
-{% block title %}Edit Formation{% endblock %}
+{% block title %}Edition d'une formation{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css">
 {% endblock %}
 
 {% block body %}
-    <h1>Edit Formation</h1>
+    <h1>Edition d'une Formation</h1>
     {% if formation.image %}
+    
         <img src="{{ asset(formation.image.imgPath) }}" />
         {{ include('formation/_delete_img_form.html.twig') }}
     {% endif %}
-
+<div style="margin-top:30px;"></div>
     {{ include('formation/_form.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('formation_index') }}">back to list</a>
