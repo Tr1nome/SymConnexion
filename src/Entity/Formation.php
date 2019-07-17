@@ -48,6 +48,11 @@ class Formation
      */
     private $time;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $allowed;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -155,6 +160,18 @@ class Formation
     public function setTime(?\DateTimeInterface $time): self
     {
         $this->time = $time;
+
+        return $this;
+    }
+
+    public function getAllowed(): ?bool
+    {
+        return $this->allowed;
+    }
+
+    public function setAllowed(bool $allowed): self
+    {
+        $this->allowed = $allowed;
 
         return $this;
     }

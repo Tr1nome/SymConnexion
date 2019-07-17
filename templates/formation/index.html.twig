@@ -54,7 +54,9 @@
         </tbody>
 
     </table>
-
+<div style="display:flex; justify-content:center;">
+    {{ knp_pagination_render(formations) }}
+    </div>
     <a href="{{ path('formation_new') }}"><i class="fas fa-plus-square" style="color:green;"></i></a>
 
 {% endblock %}

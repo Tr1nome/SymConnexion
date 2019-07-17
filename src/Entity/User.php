@@ -66,6 +66,26 @@ class User extends BaseUser
      */
     private $adherent;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $absent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Survey", mappedBy="user")
+     */
+    private $commentaries;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Actu", mappedBy="lovedBy")
+     */
+    private $actus;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
+     */
+    private $comments;
+
     public function __construct()
     {
         parent::__construct();
@@ -73,6 +93,9 @@ class User extends BaseUser
         $this->events = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->photos = new ArrayCollection();
+        $this->commentaries = new ArrayCollection();
+        $this->actus = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -246,6 +269,108 @@ class User extends BaseUser
     public function setAdherent(bool $adherent): self
     {
         $this->adherent = $adherent;
+
+        return $this;
+    }
+
+    public function getAbsent(): ?string
+    {
+        return $this->absent;
+    }
+
+    public function setAbsent(string $absent): self
+    {
+        $this->absent = $absent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Survey[]
+     */
+    public function getCommentaries(): Collection
+    {
+        return $this->commentaries;
+    }
+
+    public function addCommentary(Survey $commentary): self
+    {
+        if (!$this->commentaries->contains($commentary)) {
+            $this->commentaries[] = $commentary;
+            $commentary->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentary(Survey $commentary): self
+    {
+        if ($this->commentaries->contains($commentary)) {
+            $this->commentaries->removeElement($commentary);
+            // set the owning side to null (unless already changed)
+            if ($commentary->getUser() === $this) {
+                $commentary->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Actu[]
+     */
+    public function getActus(): Collection
+    {
+        return $this->actus;
+    }
+
+    public function addActus(Actu $actus): self
+    {
+        if (!$this->actus->contains($actus)) {
+            $this->actus[] = $actus;
+            $actus->addLovedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActus(Actu $actus): self
+    {
+        if ($this->actus->contains($actus)) {
+            $this->actus->removeElement($actus);
+            $actus->removeLovedBy($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
 
         return $this;
     }

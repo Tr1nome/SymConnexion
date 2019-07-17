@@ -114,8 +114,8 @@ class UserController extends AbstractFOSRestController
         /* Serializer, normalizer exemple */
 
         $serializer = new Serializer([new ObjectNormalizer()]);
-        $object = $serializer->normalize($object, null,
-            ['attributes' => [
+        $object = $serializer->normalize($object, null, ['enable_max_depth' => true,
+            'attributes' => [
                 'id',
                 'email',
                 'username',

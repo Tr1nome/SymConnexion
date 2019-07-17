@@ -1,0 +1,14 @@
+<h2>Bonjour Fenrir Studio ! </h2>
+
+    <div>
+        <p>{{ user.username }} ({{ user.fname}} {{ user.lname }}) Ne sera pas présent à la formation {{ formation.name }} </p>
+        <p>Rappel : la formation en question est censé se dérouler le</p>
+        <ul>
+            <li>
+                {{ formation.hour | date("d/m/Y") }}
+            </li>
+            <li>
+               à {{ formation.time | date("G\\hi") }}
+            </li>
+        </ul>
+    </div>

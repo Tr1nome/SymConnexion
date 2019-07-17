@@ -9,6 +9,7 @@ use App\Form\ImageType;
 use App\Event\ImageCreatedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use App\Repository\ImageRepository;
+use App\Repository\MediaTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -58,7 +59,7 @@ class ImageController extends AbstractFOSRestController
     {
         $likes = $image->getLikedBy();
         $likes = $this->serialize($likes);
-        return View::create($likes, Response::HTTP_OK);
+        return View::create($likes, Response::HTTP_OK,[],[ObjectNormalizer::ENABLE_MAX_DEPTH => true]);
     }
 
     /**
@@ -70,8 +71,8 @@ class ImageController extends AbstractFOSRestController
      */
     public function show(Image $image): View
     {
-        $image = $this->normalize($image);
-        return View::create($image, Response::HTTP_OK);
+        //$image = $this->normalize($image);
+        return View::create($image, Response::HTTP_OK,[],[ObjectNormalizer::ENABLE_MAX_DEPTH => true]);
     }
 
     /**
@@ -81,10 +82,11 @@ class ImageController extends AbstractFOSRestController
      * )
      * @Rest\View()
      */
-    public function create(Request $request): View
+    public function create(Request $request, MediaTypeRepository $mediaRepo): View
     {
 
         $image = new Image();
+        $type = $mediaRepo->findOneBy( array("name" => "Photo de portfolio"));
         $file = $request->files->get('file');
         
         if ($file){
@@ -107,6 +109,7 @@ class ImageController extends AbstractFOSRestController
             $image->setTitle($request->get('title'));
             $image->setDescription($request->get('description'));
             $image->setUploadedBy($this->getUser());
+            $image->setType($type);
             
             
             $entityManager = $this->getDoctrine()->getManager();
@@ -114,7 +117,7 @@ class ImageController extends AbstractFOSRestController
             $entityManager->flush();
             $imageEvent = new ImageCreatedEvent($image);
             $this->dispatcher->dispatch('image.created', $imageEvent);
-            $image = $this->deserialize($image);
+            $image = $this->normalize($image);
             
         }
 
@@ -128,11 +131,11 @@ class ImageController extends AbstractFOSRestController
      * )
      * @Rest\View()
      */
-    public function uploadProfilePicture(Request $request): View
+    public function uploadProfilePicture(Request $request, MediaTypeRepository $mediaRepo): View
     {
 
         $image = new Image();
-        $type = new MediaType();
+        $type = $mediaRepo->findOneBy( array("name" => "Photo de profil"));
         $file = $request->files->get('file');
         
         if ($file){
@@ -154,6 +157,8 @@ class ImageController extends AbstractFOSRestController
             $image->setAllowed(true);
             $image->setTitle($request->get('title'));
             $image->setDescription($request->get('description'));
+            $image->setType($type);
+            
             $image->setUploadedBy($this->getUser());
             $image->setUser($this->getUser());
             
@@ -161,7 +166,7 @@ class ImageController extends AbstractFOSRestController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($image);
             $entityManager->flush();
-            $image = $this->deserialize($image);
+            $image = $this->normalize($image);
             
         }
 
@@ -298,7 +303,8 @@ class ImageController extends AbstractFOSRestController
                 'type'=>['name'],
                 'createdAt',
                 'likedBy'=>['username'],
-                'uploadedBy'=>['username']
+                'uploadedBy'=>['username'],
+                
             ]]);
         return $object;
     }

@@ -52,18 +52,18 @@
             <td> {{image.type}} </td>
             <td>{{ image.createdAt | date("d F Y")}} à {{ image.createdAt | date("H:i")}}</td>
             <td>{{ image.updatedAt | date("d F Y")}} à {{ image.updatedAt | date("H:i")}}</td>
-            <td><a class="btn btn-success" href="{{ path('image_allow', {'id': image.id}) }}">allow</a></td>
+            <td><a class="btn btn-success" href="{{ path('image_allow', {'id': image.id}) }}">Autoriser</a></td>
             <td>
-                <a class="btn btn-warning"href="{{ path('image_show', {'id': image.id}) }}">show</a>
+                <a class="btn btn-warning"href="{{ path('image_show', {'id': image.id}) }}">Détails</a>
             </td>
             <td>
-                <a class="btn btn-primary" href="{{ path('image_edit', {'id': image.id}) }}">edit</a>
+                <a class="btn btn-primary" href="{{ path('image_edit', {'id': image.id}) }}">Editer</a>
             </td>
         </tr>
     
 {% else %}
 
-no records found
+Aucune image 
 
 {% endfor %}
 </tbody>

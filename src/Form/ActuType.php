@@ -6,6 +6,7 @@ use App\Entity\Actu;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 class ActuType extends AbstractType
@@ -21,7 +22,9 @@ class ActuType extends AbstractType
                     'config.skin' => 'moono-dark'
                     //...
                 ),
-            ));
+            ))
+            ->add('lovedBy')
+            ->add('commentaries');
     }
     
     public function configureOptions(OptionsResolver $resolver)

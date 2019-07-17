@@ -34,6 +34,7 @@ class FormationType extends AbstractType
             ->add('image',ImageType::class)
             ->add('user', null,array
             ('expanded'=>true,'multiple'=>true))
+            ->add('allowed')
             ;
     }
     public function configureOptions(OptionsResolver $resolver)

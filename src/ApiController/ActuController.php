@@ -3,11 +3,18 @@
 namespace App\ApiController;
 
 use App\Entity\Actu;
+use App\Entity\User;
+use App\Entity\Comment;
 use App\Form\ActuType;
 use App\Repository\ActuRepository;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\View\View;
+use App\ApiController\AuthController;
+use FOS\UserBundle\Model\UserManagerInterface;
+use FOS\UserBundle\Doctrine\UserManager;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +34,8 @@ class ActuController extends AbstractFOSRestController
     public function index(ActuRepository $actuRepository): View
     {
         $actus = $actuRepository->findAll();
-        return View::create($actus, Response::HTTP_OK);
+        $actualite = $this->normalize($actus);
+        return View::create($actualite, Response::HTTP_OK);
     }
 
     /**
@@ -117,4 +125,77 @@ class ActuController extends AbstractFOSRestController
 
         return View::create([], Response::HTTP_NO_CONTENT);
     }
+
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/like",
+     * name="actu_like_api",
+     * )
+     * @Rest\View()
+     */
+    public function like(Request $request, Actu $actu): View
+    {
+        $actu->addLovedBy($this->getUser());
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($actu);
+        $em->flush();
+        $actualite = $this->normalize($actu);
+        return View::create($actualite, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/dislike",
+     * name="actu_dislike_api",
+     * )
+     * @Rest\View()
+     */
+    public function dislike(Request $request, Actu $actu): View
+    {
+        $actu->removeLovedBy($this->getUser());
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($actu);
+        $em->flush();
+        $actualite = $this->normalize($actu);
+        return View::create($actualite, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @Rest\Patch(
+     * path = "/{id}/comment",
+     * name="actu_comment_api",
+     * )
+     * @Rest\View()
+     */
+    public function comment(Request $request, Actu $actu): View {
+
+        $comment = new Comment();
+        $comment->setContent($request->get('commentary'));
+        $comment->setUser($this->getuser());
+        $actu->addCommentary($comment);
+        $entityManager = $this->getdoctrine()->getManager();
+        $entityManager->persist($actu);
+        $entityManager->persist($comment);
+        $entityManager->flush();
+        $actual = $this->normalize($actu);
+
+        return View::create($actual ,Response::HTTP_CREATED);
+
+    }
+
+    private function normalize($object)
+    {
+        /* Serializer, normalizer exemple */
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $object = $serializer->normalize($object, null,
+            ['attributes' => [
+                'id',
+                'title',
+                'content',
+                'commentaries'=>['content','user'=>['username','profilePicture'=>['imgPath']]],
+                'lovedBy' => ['id','username','adherent','profilePicture'=>['id','file','path','imgPath']],
+            ]]);
+        return $object;
+    }
+
 }

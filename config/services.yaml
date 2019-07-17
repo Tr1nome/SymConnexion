@@ -41,7 +41,7 @@ services:
         tags: [serializer.normalizer]
         calls:
             - method: setCircularReferenceLimit
-              arguments: [0]
+              arguments: [1]
             - method: setCircularReferenceHandler
               arguments: ["@circular_reference_handler"]
 
