@@ -22,9 +22,8 @@ class ActuType extends AbstractType
                     'config.skin' => 'moono-dark'
                     //...
                 ),
-            ))
-            ->add('lovedBy')
-            ->add('commentaries');
+            ));
+            
     }
     
     public function configureOptions(OptionsResolver $resolver)
