@@ -181,10 +181,10 @@ class FormationController extends AbstractController
         #Writer
         $writer = new Writer();
         $csv = $writer::createFromFileObject(new \SplTempFileObject());
-        $csv->insertOne(['Nom d\'utilisateur','Nom','Prénom','adresse mail','adhérent ?','Présence']);
+        $csv->insertOne(['NOM D\'UTILISATEUR','NOM','PRENOM','EMAIL','ADHERENT']);
         foreach ($users as $user) {
             
-            $csv->insertOne([$user->getUsername(), $user->getLname(), $user->getFname(), $user->getEmail(), $user->getAdherent(), $user->getAbsent()]);
+            $csv->insertOne([$user->getUsername(), $user->getLname(), $user->getFname(), $user->getEmail(), $user->getAdherent()]);
         }
         $csv->output($formation->getName().' users.csv');
         die;

@@ -9,11 +9,11 @@
 {% block title %}New Formation{% endblock %}
 
 {% block body %}
-    <h1>Create new Formation</h1>
+    <h1>Création d'une formation</h1>
 
     {{ include('formation/_form.html.twig') }}
 
-    <a href="{{ path('formation_index') }}">back to list</a>
+    <a class="btn btn-primary" href="{{ path('formation_index') }}">Retour</a>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

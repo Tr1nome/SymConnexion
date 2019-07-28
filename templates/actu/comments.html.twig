@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Actu index{% endblock %}
+
+{% block body %}
+    <h1>Commentaires relatifs à cette actualité</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Commentaire</th>
+                <th>Personne ayant commenté</th>
+                <th>Edition/Suppression</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        </table>
+        {% for commentari in actu.commentaries %}
+            <div>{{ commentari }}</div>
+        {% else %}
+            <div>
+                <td colspan="4">no records found</td>
+            </div>
+        {% endfor %}
+        
+
+    
+{% endblock %}

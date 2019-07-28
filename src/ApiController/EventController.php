@@ -169,6 +169,7 @@ class EventController extends AbstractFOSRestController
                 'description',
                 'hour',
                 'time',
+                'max',
                 'place',
                 'user' => ['id','username','profilePicture'=>['id','path','imgPath']]
             ]]);

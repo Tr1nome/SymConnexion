@@ -67,11 +67,6 @@ class User extends BaseUser
     private $adherent;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $absent;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Survey", mappedBy="user")
      */
     private $commentaries;
@@ -273,17 +268,6 @@ class User extends BaseUser
         return $this;
     }
 
-    public function getAbsent(): ?string
-    {
-        return $this->absent;
-    }
-
-    public function setAbsent(string $absent): self
-    {
-        $this->absent = $absent;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Survey[]

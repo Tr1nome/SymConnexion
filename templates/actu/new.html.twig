@@ -3,9 +3,9 @@
 {% block title %}New Actu{% endblock %}
 
 {% block body %}
-    <h1>Create new Actu</h1>
+    <h1>Création d'une actualité</h1>
 
     {{ include('actu/_form.html.twig') }}
 
-    <a href="{{ path('actu_index') }}">back to list</a>
+    <a class="btn btn-primary" href="{{ path('actu_index') }}">Retour</a>
 {% endblock %}

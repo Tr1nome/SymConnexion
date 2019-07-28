@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block title %}New Image{% endblock %}
 
 {% block body %}
-    <h1>Create new Image</h1>
+    <h1>Création d'une image</h1>
 
     {{ include('image/_form.html.twig') }}
 
-    <a href="{{ path('image_index') }}">back to list</a>
+    <a class="btn btn-primary" href="{{ path('image_index') }}">Retour</a>
 {% endblock %}

@@ -1,1 +1,8 @@
-<p>Un email a été envoyé vous devrez cliquer sur le lien pour changer votre mot de passe</p>
+{% extends "bundles/FOSUserBundle/layout.html.twig" %}
+{% block fos_user_content %}
+    <div class="container">
+        <div class="row mt-5" style="display:flex;justify-content:center;">
+    <p style="align-text:center">Un email a été envoyé vous devrez cliquer sur le lien pour changer votre mot de passe</p>
+        </div>
+    </div>
+{% endblock fos_user_content %}

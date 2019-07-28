@@ -16,11 +16,24 @@
        <img src="{{ asset('img/icon.png')}}"/> 
     </div>
     <div class="row">
-        <div>
+        <ul>
+            <li>
+            Actualités : {{ actus | length }}
+            </li>
             
-        </div>
+            <li>
+            Formations : {{ formations | length }}
+            </li>
+            
+            <li>
+            Events : {{ events | length }}
+            </li>
+        
+            <li>
+            Images : {{ images | length }}
+            </li>
+        </ul>
     </div>
-
 </div>
 
 

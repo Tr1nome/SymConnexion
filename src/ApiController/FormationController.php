@@ -13,6 +13,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use App\Event\FormationRegisteredEvent;
 use App\Event\FormationAbsentedEvent;
+use App\Event\FormationSuggestedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,24 +68,31 @@ class FormationController extends AbstractFOSRestController
      */
     public function create(Request $request, FormationRepository $formation, ImageRepository $imageRepo, MediaTypeRepository $mediaRepo): View
     {
+        $user = $this->getuser();
         $formation = new Formation();
         $type = $mediaRepo->findOneBy( array("name" => "Photo privée"));
         $em = $this->getDoctrine()->getManager();
             $formation->setName($request->get('name'));
             $formation->setDescription($request->get('description'));
             $formation->setAllowed(false);
+            $formation->setMax(0);
             
         if (!empty($request->get('image'))) {
             $image = $imageRepo->find($request->get('image'));
             $image->setAllowed(true);
             $image->setType($type);
+            $image->setTitle("Sans titre");
+            $image->setDescription("Aucune description");
             $formation->setImage($image);
         } else {
             $formation->setImage(null);
         }
             $em->persist($formation);
+            $em->persist($user);
             $em->flush();
             $formationCreated = $this->normalize($formation);
+            $formationEvent = new FormationSuggestedEvent($formation, $user);
+            $this->dispatcher->dispatch('formation.suggested', $formationEvent);
         
         return View::create($formationCreated, Response::HTTP_CREATED);
     }
@@ -137,7 +145,7 @@ class FormationController extends AbstractFOSRestController
     public function register(Formation $formation, Request $request): View
     {
         $user = $this->getUser();
-        $user->setAbsent('Présent');
+        //$user->setAbsent('Présent');
         $formation->addUser($user);
         $formations = $this->normalize($formation);
         $entityManager = $this->getDoctrine()->getManager();
@@ -174,7 +182,7 @@ class FormationController extends AbstractFOSRestController
     public function absent(Formation $formation, Request $request): View
     {
         $user = $this->getUser();
-        $user->setAbsent('Absent');
+        //$user->setAbsent('Absent');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
@@ -208,6 +216,7 @@ class FormationController extends AbstractFOSRestController
                 'id',
                 'name',
                 'description',
+                'max',
                 'allowed',
                 'user' => ['id','username','adherent','profilePicture'=>['id','file','path','imgPath']],
                 'image'=> ['id','file','path','imgPath','likedBy'=>['username']],

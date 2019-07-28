@@ -4,14 +4,7 @@
 
 {% block body %}
     <h1>Gestion des utilisateurs</h1>
-    <label for="filterBy">Filter par :</label>
-    <select id="filterBy">
-    <option value="">--Aucune option choisie--</option>
-    <option value="id">ID</option>
-    <option value="username">Nom d'utilisateur</option>
-    <option value="email">Email</option>
-    <option value="custom">Custom</option>
-    </select>
+    
     <table class="table table-striped">
         <thead>
             <tr>
@@ -20,9 +13,10 @@
                 <th>Adresse Mail</th>
                 <th>Role</th>
                 <th>Photo de profil</th>
-                <th>Inscrit ?</th>
+                <th>Adhérent ?</th>
                 <th>Passer administrateur ?</th>
                 <th>Passer formateur ?</th>
+                <th>Passer adhérent ?</th>
             </tr>
         </thead>
         <tbody>
@@ -34,14 +28,15 @@
                 <td> 
                 
                  {% if user.hasRole('ROLE_ADMIN') %}
-                 <img title="Cet utilisateur a un statut de pseudo administrateur" style="width: 80px;height: 80px;" src="{{ asset('img/gold.png') }}"/>
+                 <p>Administrateur</p>
                  {% else %}
-                 <img title="Cet utilisateur a un statut d'utilisateur" style="width:70px;height:70px;" src="{{ asset('img/silver png.png') }}"/>
+                 <p>Utilisateur</p>
                  {% endif %}
                  </td>
                 <td>{% if user.profilePicture %} <img style="width:50px;height:50px;" src="{{ asset(user.profilePicture.imgPath)}}"/> {% endif %} </td>
-                <td>{% if user.enabled %}<p style="color:green">Oui</p>{% else %}
-                <a class="btn-success" href="{{ path('user_confirm')}}">Confirmer l'utilisateur</a>{% endif %}</td>
+                <td>{% if user.adherent %}<p style="color:green">Oui</p>{% else %}
+                <p style="color:red">Non</p>{% endif %}
+                </td>
                 <td>
                 {% if user.hasRole('ROLE_ADMIN') %}
                 {% if user.username == "Admin" %}
@@ -50,7 +45,7 @@
                 <a class="btn btn-danger"  href="{{ path('user_demote',{'id': user.id})}}">Non</a>
                 {% endif %}
                 {% endif %}
-                {% if user.hasRole('ROLE_USER') %}
+                {% if user.hasRole('ROLE_USER') and user.hasRole('ROLE_ADMIN') == false %}
                 {% if user.username != "Admin" %}
                 <a class="btn btn-success" disabled  href="{{ path('user_promote',{'id': user.id})}}">Oui</a>
                 {% endif %}
@@ -63,6 +58,13 @@
                 <a href="{{ path('user_former', {'id': user.id } ) }}" class="btn btn-success">Oui</a>
                 {% endif %}
                 </td>
+                <td>
+                {% if user.adherent %}
+                <a href="{{ path('user_unadhere', {'id': user.id } ) }}" class="btn btn-danger">Non</a>
+                {% else %}
+                <a href="{{ path('user_adhere', {'id': user.id } ) }}" class="btn btn-success">Oui</a>
+                {% endif %}
+                </td>
             </tr>
         {% else %}
             <tr>
@@ -73,5 +75,7 @@
         </tbody>
 
     </table>
-
+    <div style="display:flex; justify-content:center;">
+    
+    </div>
 {% endblock %}

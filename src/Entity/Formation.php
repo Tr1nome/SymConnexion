@@ -53,6 +53,11 @@ class Formation
      */
     private $allowed;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $max;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -172,6 +177,18 @@ class Formation
     public function setAllowed(bool $allowed): self
     {
         $this->allowed = $allowed;
+
+        return $this;
+    }
+
+    public function getMax(): ?int
+    {
+        return $this->max;
+    }
+
+    public function setMax(int $max): self
+    {
+        $this->max = $max;
 
         return $this;
     }

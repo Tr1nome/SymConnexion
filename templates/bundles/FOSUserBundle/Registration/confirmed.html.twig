@@ -1,5 +1,24 @@
-{% templates/bundles/FOSUserBundle/Registration/confirmed.html.twig %}
-{% extends "@!FOSUser/Registration/confirmed.html.twig" %}
+{% extends "@FOSUser/layout.html.twig" %}
 
+{% trans_default_domain 'FOSUserBundle' %}
 
-    <div>Votre compte a bien été activé ! Vous pouvez maintenant vous connecter sur <a href="http://www.fenriz-studio.fr"</a></div>
+{% block fos_user_content %}
+    {% block nav %}
+    {% endblock %}
+    <div class="login d-flex align-items-center justify-content-center">
+    <div class="row signIn">
+    <div class="col">
+    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
+    {% if targetUrl %}
+        <p>
+            <a href="http://fenriz-studio.fr">
+                <button class="btn btn-secondary">
+                    {{ 'registration.back'|trans }}
+                </button>
+            </a>
+        </p>
+        </div>
+        </div>
+        </div>
+    {% endif %}
+{% endblock fos_user_content %}

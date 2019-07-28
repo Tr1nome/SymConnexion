@@ -17,6 +17,8 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use App\Repository\UserRepository;
 use App\Repository\ImageRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 /**
@@ -29,6 +31,19 @@ class AuthController extends AbstractFOSRestController
     public function __construct(EventDispatcherInterface $dispatcher)
     {
         $this->eventDispatcher = $dispatcher;
+    }
+
+    /**
+     * @Route("/redirectionTo", name="redirectTo")
+     */
+    public function redirection()
+    {
+        /*$user = $this->getUser();
+        if($user->hasRole('ROLE_ADMIN'))
+        {
+            return $this->redirectToRoute('fos_user_profile_show');
+        }*/
+        return $this->redirectToRoute('to_ng');
     }
     /**
      * @Rest\Post(

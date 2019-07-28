@@ -34,7 +34,7 @@ class Actu
     private $lovedBy;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="actu")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="actu", cascade={"persist","remove"})
      */
     private $commentaries;
 

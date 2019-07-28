@@ -47,7 +47,8 @@ class ActuController extends AbstractFOSRestController
      */
     public function show(Actu $actu): View
     {
-        return View::create($actu, Response::HTTP_OK);
+        $actualite = $this->normalize($actu);
+        return View::create($actualite, Response::HTTP_OK);
     }
 
     /**
@@ -192,8 +193,8 @@ class ActuController extends AbstractFOSRestController
                 'id',
                 'title',
                 'content',
-                'commentaries'=>['content','user'=>['username','profilePicture'=>['imgPath']]],
-                'lovedBy' => ['id','username','adherent','profilePicture'=>['id','file','path','imgPath']],
+                'commentaries'=>['id','content','user'=>['username','profilePicture'=>['imgPath']]],
+                'lovedBy' => ['id','username','adherent','fname','lname','profilePicture'=>['id','file','path','imgPath']],
             ]]);
         return $object;
     }

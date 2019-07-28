@@ -27,7 +27,7 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         auth_register:
-            host: admin\.fenrir-studio\.fr
+            host: api\.fenrir-studio\.fr
             pattern: ^/auth/register
             stateless: true
             anonymous: true
@@ -54,17 +54,19 @@ security:
 
     access_control:
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY , host: admin\.fenrir-studio\.fr }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY, host: admin\.fenrir-studio\.fr}
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.fenrir-studio\.fr} 
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY , host: admin\.fenrir-studio\.fr}
-        - { path: ^/, role: ROLE_ADMIN, host: admin\.fenrir-studio\.fr }
+        - { path: ^/home, role: ROLE_ADMIN, host: admin\.fenrir-studio\.fr }
         - { path: ^/formation, role: ROLE_USER, host: api\.fenrir-studio\.fr }
         - { path: ^/survey, role: ROLE_USER, host: api\.fenrir-studio\.fr }
+        - { path: ^/contact, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.fenrir-studio\.fr }
         - { path: ^/survey/new, role: IS_AUTHENTICATED_FULLY, host: api\.fenrir-studio\.fr }
         - { path: ^/formation/new, role: ROLE_USER, host: api\.fenrir-studio\.fr }
         - { path: ^/formation, role: ROLE_ADMIN, host: admin\.fenrir-studio\.fr }
         - { path: ^/event, role: IS_AUTHENTICATED_ANONYMOUSLY, host: admin\.fenrir-studio\.fr }
         - { path: ^/users, role: ROLE_ADMIN, host: admin\.fenrir-studio\.fr }
         - { path: ^/admin, role: ROLE_ADMIN, host: admin\.fenrir-studio\.fr }
-        - { path: ^/redirectionTo, role: IS_AUTHENTICATED_FULLY, host: admin\.fenrir-studio\.fr }
         - { path: ^/event, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.fenrir-studio\.fr }
         #- { path: ^/auth, role: IS_AUTHENTICATED_ANONYMOUSLY, host: api\.connexion\.fr}
         - { path: ^/actu, role: IS_AUTHENTICATED_ANONYMOUSLY, host: admin\.fenrir-studio\.fr }

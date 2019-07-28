@@ -5,7 +5,7 @@
 {% block body %}
 <h1>Portfolio</h1>
 
-<div class="container">
+
     <h4>Options</h4>
     <a class="btn btn-primary btn-sm" href="{{ path('image_activated') }}" role="button">Images commentées
     
@@ -32,7 +32,6 @@
         <tr>
         <th scope="col">#</th>
         <th scope="col">Preview</th>
-        <th scope="col">Type</th>
         <th scope="col">Autorisation</th>
         <th scope="col">Type</th>
         <th scope="col">Crée le </th>
@@ -46,13 +45,12 @@
     {% for image in images %}
         <tr>
             <td>{{ image.id }}</td>
-            <td><img src="{{ asset(image.imgPath) }}" style="width:150px;height:auto;" class="img-thumbnail"/></td>
-            <td>type de l'image</td>
+            <td><img src="{{ asset(image.imgPath) }}" style="width:70px;height:70px;" class="img-thumbnail"/></td>
             <td>{% if image.allowed %} <p style="color:green;">Oui</p> {% else %} <p style="color:red;">Non</p>{% endif %}</td>
             <td> {{image.type}} </td>
             <td>{{ image.createdAt | date("d F Y")}} à {{ image.createdAt | date("H:i")}}</td>
             <td>{{ image.updatedAt | date("d F Y")}} à {{ image.updatedAt | date("H:i")}}</td>
-            <td><a class="btn btn-success" href="{{ path('image_allow', {'id': image.id}) }}">Autoriser</a></td>
+            <td>{% if image.allowed == false %}<a class="btn btn-success" href="{{ path('image_allow', {'id': image.id}) }}">Autoriser</a>{% endif %}</td>
             <td>
                 <a class="btn btn-warning"href="{{ path('image_show', {'id': image.id}) }}">Détails</a>
             </td>
@@ -69,11 +67,11 @@ Aucune image
 </tbody>
     </table>
     
-</div>
+
 
 <div style="display:flex; justify-content:center;">
     {{ knp_pagination_render(images) }}
     </div>
 
-<a href="{{ path('image_new') }}">Create new</a>
+<a class="btn btn-success mb-5"  href="{{ path('image_new') }}"><i class="fas fa-plus-square"></i></a>
 {% endblock %}

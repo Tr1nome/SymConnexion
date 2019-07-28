@@ -1,8 +1,8 @@
 to_ng:
     path: /
-    host: 'www.fenriz-studio.fr'
+    host: 'localhost:4200'
     defaults:
-        url: 'http://www.fenriz-studio.fr'
+        url: 'localhost:4200/login'
 
 controllers:
     host: 'admin.fenrir-studio.fr'

@@ -27,8 +27,9 @@ class UserController extends AbstractController{
     /**
      * @Route("/", name="user_index", methods={"GET"})
      */
-    public function index(UserManagerInterface $userManager): Response
+    public function index(Request $request, UserManagerInterface $userManager, PaginatorInterface $paginator): Response
     {
+        
         return $this->render('user_list/index.html.twig', [
             'users' => $userManager->findUsers(),
         ]);
@@ -58,6 +59,35 @@ class UserController extends AbstractController{
             'users' => $user,
         ]);
     }
+
+    /**
+     * @Route("/adhere/{id}", name="user_adhere", methods={"GET"})
+     */
+    public function adhere(UserManagerInterface $userManager, Request $request): Response
+    {
+        $user = $userManager->findUserBy(array('id'=> $request->get('id')));
+        $user->setAdherent(true);
+        $userManager->updateUser($user);
+        
+        return $this->render('user_list/index.html.twig', [
+            'users' => $userManager->findUsers(),
+        ]);
+    }
+
+    /**
+     * @Route("/unadhere/{id}", name="user_unadhere", methods={"GET"})
+     */
+    public function unadhere(UserManagerInterface $userManager, Request $request): Response
+    {
+        $user = $userManager->findUserBy(array('id'=> $request->get('id')));
+        $user->setAdherent(false);
+        $userManager->updateUser($user);
+        
+        return $this->render('user_list/index.html.twig', [
+            'users' => $userManager->findUsers(),
+        ]);
+    }
+
     /**
      * @Route("/promote/{id}", name="user_promote")
      */

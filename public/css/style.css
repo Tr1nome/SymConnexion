@@ -1,15 +1,17 @@
-.footer{
-    background: #313131;
-    bottom:0;
-    height:50px;
+
+
+
+/**
+ * Footer Styles
+ */
+
+.footer {
+  position:sticky;
+  padding: 1rem;
+  margin-top: 10px;
+  background-color: #343a40!important;
+  text-align: center;
 }
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-  }
-  
   .switch input { 
     opacity: 0;
     width: 0;

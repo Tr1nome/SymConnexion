@@ -24,6 +24,7 @@ class EventType extends AbstractType
                     'config.skin' => 'moono-dark'
                     //...
                 ),))
+            ->add('max')
             ->add('hour', DateType::class, [
                 'label' => 'Date de l\'évènement',
                 'html5' => false,
@@ -35,8 +36,7 @@ class EventType extends AbstractType
                 'html5' => false,
             ])
             ->add('place')
-            ->add('user', null,array
-            ('expanded'=>true,'multiple'=>true))
+            
         ;
     }
 

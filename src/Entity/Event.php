@@ -48,6 +48,11 @@ class Event
      */
     private $place;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $max;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -140,6 +145,18 @@ class Event
     public function setPlace(?string $place): self
     {
         $this->place = $place;
+
+        return $this;
+    }
+
+    public function getMax(): ?int
+    {
+        return $this->max;
+    }
+
+    public function setMax(int $max): self
+    {
+        $this->max = $max;
 
         return $this;
     }

@@ -14,14 +14,14 @@ class ActuType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
+            ->add('title', null,['label'=>'Titre de l\'actualité'])
             ->add('content', CKEditorType::class, array(
                 'config' => array(
                     'uiColor' => '#ffffff',
                     'title' => 'title',
                     'config.skin' => 'moono-dark'
                     //...
-                ),
+                ),'label'=>'Contenu de l\'actualité'
             ));
             
     }

@@ -20,21 +20,21 @@ class FormationType extends AbstractType
                     'title' => 'title',
                     'config.skin' => 'moono-dark'
                     //...
-                ),))
+                ),'label'=>'Description de la formation'))
+            ->add('max', null, ['label'=>'Nombre de participants maximum'])    
             ->add('hour', DateType::class, [
-                'label' => 'date du prochain cours',
+                'label' => 'Date du prochain cours',
                 'html5' => false,
                 'attr' => ['class' => 'dropdown']
                 ])
             ->add('time', TimeType::class, [
-                'label' =>'heure',
+                'label' =>'Horaires du prochain cours',
                 'widget' => 'choice',
                 'html5' => false,
             ])
             ->add('image',ImageType::class)
-            ->add('user', null,array
-            ('expanded'=>true,'multiple'=>true))
-            ->add('allowed')
+            
+            ->add('allowed', null, ['label' => 'Autoriser la formation ?'])
             ;
     }
     public function configureOptions(OptionsResolver $resolver)

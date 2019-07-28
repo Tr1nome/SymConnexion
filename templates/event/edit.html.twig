@@ -4,11 +4,11 @@
 {% block title %}Edit Event{% endblock %}
 
 {% block body %}
-    <h1>Edit Event</h1>
+    <h1>Edition d'un évènement</h1>
 
     {{ include('event/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('event_index') }}">back to list</a>
+    <a class="btn btn-primary" href="{{ path('event_index') }}">Retour</a>
 
-    {{ include('event/_delete_form.html.twig') }}
+    
 {% endblock %}

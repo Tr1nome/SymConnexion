@@ -9,6 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Egyg33k\CsvBundle;
+use Egyg33k\CsvBundle\Services\Writer;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/event")
@@ -18,10 +21,16 @@ class EventController extends AbstractController
     /**
      * @Route("/", name="event_index", methods={"GET"})
      */
-    public function index(EventRepository $eventRepository): Response
+    public function index(Request $request, EventRepository $eventRepository, PaginatorInterface $paginator): Response
     {
+        $events = $eventRepository->findAll();
+        $paginatedEvents = $paginator->paginate(
+            $events,
+            $request->query->getInt('page', 1),
+            3
+        );
         return $this->render('event/index.html.twig', [
-            'events' => $eventRepository->findAll(),
+            'events' => $paginatedEvents,
         ]);
     }
 
@@ -92,5 +101,24 @@ class EventController extends AbstractController
         }
 
         return $this->redirectToRoute('event_index');
+    }
+
+    /**
+     * @Route("/{id}/export", name="event_export", methods= "GET")
+     */
+    public function exportAction(Event $event)
+    {
+        $em= $this->getDoctrine()->getManager();
+        $users = $event->getUser();
+        #Writer
+        $writer = new Writer();
+        $csv = $writer::createFromFileObject(new \SplTempFileObject());
+        $csv->insertOne(['NOM D\'UTILISATEUR','NOM','PRENOM','EMAIL','ADHERENT']);
+        foreach ($users as $user) {
+            
+            $csv->insertOne([$user->getUsername(), $user->getLname(), $user->getFname(), $user->getEmail(), $user->getAdherent()]);
+        }
+        $csv->output($event->getName().' users.csv');
+        die;
     }
 }
