@@ -81,6 +81,16 @@ class User extends BaseUser
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Project", mappedBy="team")
+     */
+    private $projects;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Job", inversedBy="users")
+     */
+    private $jobs;
+
     public function __construct()
     {
         parent::__construct();
@@ -91,6 +101,8 @@ class User extends BaseUser
         $this->commentaries = new ArrayCollection();
         $this->actus = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->projects = new ArrayCollection();
+        $this->jobs = new ArrayCollection();
     }
 
     /**
@@ -354,6 +366,60 @@ class User extends BaseUser
             if ($comment->getUser() === $this) {
                 $comment->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Project[]
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): self
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects[] = $project;
+            $project->addTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): self
+    {
+        if ($this->projects->contains($project)) {
+            $this->projects->removeElement($project);
+            $project->removeTeam($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Job[]
+     */
+    public function getJobs(): Collection
+    {
+        return $this->jobs;
+    }
+
+    public function addJob(Job $job): self
+    {
+        if (!$this->jobs->contains($job)) {
+            $this->jobs[] = $job;
+        }
+
+        return $this;
+    }
+
+    public function removeJob(Job $job): self
+    {
+        if ($this->jobs->contains($job)) {
+            $this->jobs->removeElement($job);
         }
 
         return $this;

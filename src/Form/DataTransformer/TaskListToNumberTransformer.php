@@ -2,7 +2,7 @@
 
 namespace App\Form\DataTransformer;
 
-use App\Entity\TaskList;
+use App\Entity\Image;
 use Symfony\Component\Form\DataTransformerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -18,7 +18,7 @@ class TaskListToNumberTransformer implements DataTransformerInterface
     /**
      * Transforms an object (taskList) to a string (number).
      *
-     * @param  TaskList|null $taskList
+     * @param  Image|null $taskList
      * @return string
      */
     public function transform($taskList)
@@ -45,7 +45,7 @@ class TaskListToNumberTransformer implements DataTransformerInterface
         }
 
         $taskList = $this->entityManager
-            ->getRepository(TaskList::class)
+            ->getRepository(Image::class)
             // query for the issue with this id
             ->find($taskListNumber)
         ;

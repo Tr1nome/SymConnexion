@@ -3,6 +3,7 @@
 namespace App\ApiController;
 
 use App\Entity\User;
+use App\Entity\Job;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\View\View;
@@ -120,6 +121,7 @@ class UserController extends AbstractFOSRestController
                 'email',
                 'username',
                 'formateur',
+                'jobs'=>['name'],
                 'roles',
                 'profilePicture'=>['id','file','path','imgPath']
             ]]);

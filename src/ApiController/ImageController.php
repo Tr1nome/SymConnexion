@@ -35,14 +35,15 @@ class ImageController extends AbstractFOSRestController
     }
     /**
      * @Rest\Get(
-     * path = "/",
+     * path = "/folio",
      * name="image_api",
      * )
      * @Rest\View()
      */
-    public function index(ImageRepository $imageRepository): View
+    public function index(ImageRepository $imageRepository, MediaTypeRepository $mediaRepo): View
     {
-        $image = $imageRepository->findAll();
+        $type = $mediaRepo->findBy(array('name'=>'Photo de portfolio'));
+        $image = $imageRepository->findBy(array('type'=>$type));
 
         $images = $this->normalize($image);
         return View::create($images, Response::HTTP_OK);
@@ -91,18 +92,14 @@ class ImageController extends AbstractFOSRestController
         
         if ($file){
             $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-
-            // Move the file to the directory where brochures are stored
             try {
                 $file->move(
                     $this->getParameter('images_directory'),
                     $fileName
                 );
             } catch (FileException $e) {
-                // ... handle exception if something happens during file upload
+                
             }
-            // updates the 'brochure' property to store the PDF file name
-            // instead of its contents
             $image->setPath($this->getParameter('images_directory').'/'.$fileName);
             $image->setImgPath($this->getParameter('images_path').'/'.$fileName);
             $image->setAllowed(false);
@@ -110,7 +107,6 @@ class ImageController extends AbstractFOSRestController
             $image->setDescription($request->get('description'));
             $image->setUploadedBy($this->getUser());
             $image->setType($type);
-            
             
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($image);
@@ -268,11 +264,10 @@ class ImageController extends AbstractFOSRestController
     public function delete(Image $image): View
     {
         $entityManager = $this->getDoctrine()->getManager();
-        if ($image) {
             $this->removeFile($image->getPath());
             $entityManager->remove($image);
             $entityManager->flush();
-        }
+        
 
         return View::create([], Response::HTTP_NO_CONTENT);
     }
@@ -303,7 +298,7 @@ class ImageController extends AbstractFOSRestController
                 'type'=>['name'],
                 'createdAt',
                 'likedBy'=>['username'],
-                'uploadedBy'=>['username'],
+                'uploadedBy'=>['username','profilePicture'=>['imgPath']],
                 
             ]]);
         return $object;

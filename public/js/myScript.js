@@ -33,7 +33,7 @@ $(document).ready(function(){
     $collectionHolder.find('.listitem').each(function(){
         addItemFormDeleteLink($(this));
     });
-    $collectionHolder.data('index', $collectionHolder.find('.listitem').length);
+    $collectionHolder.data('index', $collectionHolder.find('.image').length);
     $addItemButton.on('click',function(){
         addItemForm($collectionHolder, $newItemLi);
     });

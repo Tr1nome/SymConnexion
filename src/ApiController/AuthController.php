@@ -3,6 +3,7 @@
 namespace App\ApiController;
 
 use App\Entity\User;
+use App\Entity\Job;
 use App\Event\FilterUserRegistrationEvent;
 use App\Entity\Image;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -17,6 +18,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use App\Repository\UserRepository;
 use App\Repository\ImageRepository;
+use App\Repository\JobRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -93,6 +95,41 @@ class AuthController extends AbstractFOSRestController
         return View::create($user, Response::HTTP_OK);
         
     }
+/**
+     * @Rest\Patch(
+     *     path="/profile/jobs/add",
+     *     name="auth_jobs_api"
+     * )
+     */
+    public function addJob(UserManagerInterface $userManager, JobRepository $jobRepo, Request $request): View
+    {
+        $job = $jobRepo->findOneBy(array('id'=>$request->get('id')));
+        $user = $this->getUser();
+        $user->addJob($job);
+        $userManager->updateUser($user);
+        $user = $this->normalize($user);
+        return View::create($user, Response::HTTP_OK);
+
+    }
+
+    /**
+     * @Rest\Patch(
+     *     path="/profile/jobs/remove",
+     *     name="auth_jobs_rem_api"
+     * )
+     */
+    public function removeJob(UserManagerInterface $userManager, JobRepository $jobRepo, Request $request): View
+    {
+        $job = $jobRepo->findOneBy(array('name'=>$request->get('name')));
+        $user = $this->getUser();
+        $user->removeJob($job);
+        $userManager->updateUser($user);
+        $user = $this->normalize($user);
+        return View::create($user, Response::HTTP_OK);
+
+    }
+
+
 
 /**
      * @Rest\Patch(
@@ -103,7 +140,7 @@ class AuthController extends AbstractFOSRestController
      * @param UserManagerInterface $userManager
      * @return View
      */
-    public function profileEdit(Request $request,ImageRepository $imageRepository, UserManagerInterface $userManager, UserRepository $userRepository): View
+    public function profileEdit(Request $request, UserManagerInterface $userManager): View
     {
         $user = $userRepository->find($this->getUser());
         $currentImage = $user->getImage();
@@ -139,18 +176,14 @@ class AuthController extends AbstractFOSRestController
             //$image->setDescription($request->get('description'));
             $image->setUploadedBy($this->getUser());
             $user->setProfilePicture($image);
+            $user=$this->normalize($user);
             $userManager->updateUser($user);
-            $em = $this->getDoctrine()->getManager();
-            
-            $em->persist($image);
-            $em->flush();
-            $user = $this->normalize($user);
         }
             
             
         
         
-        return View::create($user, Response::HTTP_OK);
+        return View::create($user, Response::HTTP_CREATED);
     
     }
 
@@ -168,11 +201,30 @@ class AuthController extends AbstractFOSRestController
                 'formateur',
                 'fname',
                 'lname',
+                'jobs'=>['name'],
                 'adherent',
-                'profilePicture'=>['id','file','path','imgPath','alternative'],
+                'profilePicture'=>['imgPath'],
                 'formations'=>['name','description','hour','time','image'=>['id','file','path','imgPath']],
                 'events'=>['name','description','hour','time'],
-                'photos'=>['id','path','file','createdAt','imgPath','alternative','title','description','type'=>['name']]
+                'photos'=>['id','createdAt','imgPath','alternative','title','description','type'=>['name']]
+            ]]);
+        return $object;
+    }
+
+    private function serialize($object)
+    {
+        /* Serializer, normalizer exemple */
+
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $object = $serializer->normalize($object, null, ['attributes' => [
+                'id',
+                'email',
+                'username',
+                'roles',
+                'formateur',
+                'fname',
+                'lname',
+                
             ]]);
         return $object;
     }

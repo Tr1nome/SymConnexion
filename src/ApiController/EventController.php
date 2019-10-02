@@ -136,8 +136,6 @@ class EventController extends AbstractFOSRestController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($event);
         $entityManager->flush();
-        //$formationEvent = new InscriptionEvent($formation,$user);
-        //$this->dispatcher->dispatch('formation.updated', $formationEvent);
         return View::create($events, Response::HTTP_CREATED);
     }
     /**

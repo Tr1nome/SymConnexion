@@ -14,7 +14,7 @@ use App\Repository\EventRepository;
 use App\Repository\ActuRepository;
 
 /**
- * @Route("/home", name="accueilClass_", host="admin.fenrir-studio.fr")
+ * @Route("/", name="accueilClass_", host="admin.fenrir-studio.fr")
  */
 class DefaultController extends AbstractController
 {
